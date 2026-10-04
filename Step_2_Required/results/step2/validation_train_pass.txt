@@ -1,0 +1,6 @@
+Validating dataset: data\processed\train.csv
+Shape: 8400 rows, 7 columns
+Columns: ['record_id', 'attendance_pct', 'assessment_pct', 'assignment_pct', 'engagement_score', 'prior_performance_pct', 'risk_label']
+Missing values: {'record_id': 0, 'attendance_pct': 0, 'assessment_pct': 0, 'assignment_pct': 0, 'engagement_score': 0, 'prior_performance_pct': 0, 'risk_label': 0}
+------------------------------------------------------------
+STEP 1 DATA CHECK PASSED

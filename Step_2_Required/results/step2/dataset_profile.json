@@ -1,0 +1,200 @@
+{
+  "dataset_name": "SC03 Academic Decision-Support Benchmark Dataset",
+  "total_records": 12000,
+  "split_counts": {
+    "train": 8400,
+    "val": 1800,
+    "test": 1800
+  },
+  "missing_values": {
+    "record_id": 0,
+    "attendance_pct": 0,
+    "assessment_pct": 0,
+    "assignment_pct": 0,
+    "engagement_score": 0,
+    "prior_performance_pct": 0,
+    "risk_label": 0
+  },
+  "indicator_statistics": {
+    "attendance_pct": {
+      "mean": 71.66,
+      "std": 18.68,
+      "min": 2.1,
+      "q25": 58.7,
+      "median": 72.4,
+      "q75": 86.2,
+      "max": 100.0
+    },
+    "assessment_pct": {
+      "mean": 63.06,
+      "std": 22.75,
+      "min": 0.0,
+      "q25": 47.6,
+      "median": 63.9,
+      "q75": 80.0,
+      "max": 100.0
+    },
+    "assignment_pct": {
+      "mean": 65.39,
+      "std": 21.72,
+      "min": 0.0,
+      "q25": 50.7,
+      "median": 66.2,
+      "q75": 81.8,
+      "max": 100.0
+    },
+    "engagement_score": {
+      "mean": 6.17,
+      "std": 2.33,
+      "min": 0.0,
+      "q25": 4.6,
+      "median": 6.2,
+      "q75": 7.9,
+      "max": 10.0
+    },
+    "prior_performance_pct": {
+      "mean": 64.4,
+      "std": 20.42,
+      "min": 0.0,
+      "q25": 50.3,
+      "median": 64.6,
+      "q75": 79.3,
+      "max": 100.0
+    }
+  },
+  "correlation_matrix": {
+    "attendance_pct": {
+      "attendance_pct": 1.0,
+      "assessment_pct": 0.432,
+      "assignment_pct": 0.616,
+      "engagement_score": 0.617,
+      "prior_performance_pct": 0.367
+    },
+    "assessment_pct": {
+      "attendance_pct": 0.432,
+      "assessment_pct": 1.0,
+      "assignment_pct": 0.59,
+      "engagement_score": 0.476,
+      "prior_performance_pct": 0.635
+    },
+    "assignment_pct": {
+      "attendance_pct": 0.616,
+      "assessment_pct": 0.59,
+      "assignment_pct": 1.0,
+      "engagement_score": 0.623,
+      "prior_performance_pct": 0.538
+    },
+    "engagement_score": {
+      "attendance_pct": 0.617,
+      "assessment_pct": 0.476,
+      "assignment_pct": 0.623,
+      "engagement_score": 1.0,
+      "prior_performance_pct": 0.411
+    },
+    "prior_performance_pct": {
+      "attendance_pct": 0.367,
+      "assessment_pct": 0.635,
+      "assignment_pct": 0.538,
+      "engagement_score": 0.411,
+      "prior_performance_pct": 1.0
+    }
+  },
+  "class_distributions": {
+    "Total": {
+      "low": {
+        "count": 5339,
+        "pct": 44.49
+      },
+      "medium": {
+        "count": 3135,
+        "pct": 26.12
+      },
+      "high": {
+        "count": 3526,
+        "pct": 29.38
+      }
+    },
+    "Train": {
+      "low": {
+        "count": 3737,
+        "pct": 44.49
+      },
+      "medium": {
+        "count": 2195,
+        "pct": 26.13
+      },
+      "high": {
+        "count": 2468,
+        "pct": 29.38
+      }
+    },
+    "Val": {
+      "low": {
+        "count": 801,
+        "pct": 44.5
+      },
+      "medium": {
+        "count": 470,
+        "pct": 26.11
+      },
+      "high": {
+        "count": 529,
+        "pct": 29.39
+      }
+    },
+    "Test": {
+      "low": {
+        "count": 801,
+        "pct": 44.5
+      },
+      "medium": {
+        "count": 470,
+        "pct": 26.11
+      },
+      "high": {
+        "count": 529,
+        "pct": 29.39
+      }
+    }
+  },
+  "baseline_leakage_check": {
+    "baseline_accuracy": 0.7828,
+    "baseline_macro_f1": 0.7704,
+    "per_class_recall": {
+      "low": 0.8614,
+      "medium": 0.8128,
+      "high": 0.6371
+    },
+    "per_class_f1": {
+      "low": 0.8773,
+      "medium": 0.6626,
+      "high": 0.7712
+    },
+    "confusion_matrix": {
+      "low": {
+        "low": 690,
+        "medium": 111,
+        "high": 0
+      },
+      "medium": {
+        "low": 80,
+        "medium": 382,
+        "high": 8
+      },
+      "high": {
+        "low": 2,
+        "medium": 190,
+        "high": 337
+      }
+    },
+    "is_circular": false,
+    "explanation": "Baseline accuracy is 78.3% (strictly non-circular). Linear baseline formula encounters natural errors on boundary and non-linear interaction cases (e.g. high engagement with weak assessment), providing legitimate comparative headroom for neural classifiers."
+  },
+  "sha256_manifest": {
+    "dataset.csv": "424f7eaa2efe4640ae004669e36680ab49233df869b06a9ff56c5b8cbdbda86e",
+    "train.csv": "7de86756ffbcc8abe1a4d20f8071a9852ae8a1145ca9457fc411eeddd0741b2e",
+    "val.csv": "a2fc12efd09e793a4f26135d2bdc193a44d20b4520ac3477e0e5ee46ba631885",
+    "test.csv": "292f333ed4fc5fedbbf06e643d783703f327d22b1c5a22543bc4321116b55dfc",
+    "protected_attributes.csv": "9db174ae5b9138c2acf4bb7e1a276ac8927a71478eeec24ff606c59f8be2170a"
+  }
+}
