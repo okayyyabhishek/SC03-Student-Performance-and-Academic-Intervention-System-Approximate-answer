@@ -1,0 +1,24 @@
+{
+  "technique": "feed-forward ANN / backpropagation (scikit-learn MLPClassifier)",
+  "architecture": "5 inputs -> 16 hidden neurons -> 8 hidden neurons -> 3 output neurons (Softmax)",
+  "features": [
+    "attendance_pct",
+    "assessment_pct",
+    "assignment_pct",
+    "engagement_score",
+    "prior_performance_pct"
+  ],
+  "target": "risk_label",
+  "classes": [
+    "high",
+    "low",
+    "medium"
+  ],
+  "random_seed": 42,
+  "training_iterations": 79,
+  "final_loss": 0.36699,
+  "validation_accuracy": 0.8494,
+  "validation_macro_f1": 0.8352,
+  "test_accuracy": 0.8411,
+  "test_macro_f1": 0.829
+}
