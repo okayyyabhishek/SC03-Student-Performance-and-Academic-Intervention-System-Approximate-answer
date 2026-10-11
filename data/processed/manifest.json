@@ -1,0 +1,96 @@
+{
+  "dataset_name": "SC03 Academic Decision-Support Benchmark Dataset",
+  "description": "12,000-record pseudonymous academic indicator dataset with independent non-circular ground-truth labels and isolated demographic attributes.",
+  "source_type": "Documented Synthetic Scenario Generator (OULAD Benchmark Specification)",
+  "source_citation": "Open University Learning Analytics Dataset (OULAD) proxy architecture & synthetic scenario benchmark; Kuzilek, Hlosta & Zdrahal (2017) analogue.",
+  "licence": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+  "generation_date_utc": "2026-10-01T04:04:56.267985+00:00",
+  "seed": 42,
+  "raw_record_count": 12000,
+  "processed_record_count": 12000,
+  "split_policy": "Stratified 70/15/15 by risk_label",
+  "split_counts": {
+    "train": 8400,
+    "val": 1800,
+    "test": 1800,
+    "total": 12000
+  },
+  "class_distribution": {
+    "total": {
+      "low": 5339,
+      "high": 3526,
+      "medium": 3135
+    },
+    "train": {
+      "low": 3737,
+      "high": 2468,
+      "medium": 2195
+    },
+    "val": {
+      "low": 801,
+      "high": 529,
+      "medium": 470
+    },
+    "test": {
+      "low": 801,
+      "high": 529,
+      "medium": 470
+    }
+  },
+  "column_mapping": {
+    "record_id": "Unique pseudonymous student identifier (STU-XXXXX)",
+    "attendance_pct": "Classroom attendance percentage (OULAD active-days proxy)",
+    "assessment_pct": "Continuous internal assessment percentage (OULAD TMA analogue)",
+    "assignment_pct": "Homework and laboratory assignment percentage (OULAD CMA analogue)",
+    "engagement_score": "LMS portal engagement activity on 0.0-10.0 scale (OULAD VLE clicks log-scaled)",
+    "prior_performance_pct": "Prerequisite coursework cumulative performance percentage",
+    "risk_label": "Target intervention classification: low, medium, high"
+  },
+  "proxy_flags": {
+    "attendance_pct": "Simulated attendance tracking proxy (OULAD active-days analogue)",
+    "engagement_score": "Standardized LMS telemetry score (0-10 scale)"
+  },
+  "protected_attributes_file": "protected_attributes.csv",
+  "protected_attributes_policy": "TR-014: Demographic columns (gender, age_band, disability, socio_economic_decile) are stored exclusively in protected_attributes.csv and NEVER joined into model features. Reserved strictly for the Step 7 fairness and bias audit.",
+  "sha256": {
+    "dataset.csv": "424f7eaa2efe4640ae004669e36680ab49233df869b06a9ff56c5b8cbdbda86e",
+    "train.csv": "7de86756ffbcc8abe1a4d20f8071a9852ae8a1145ca9457fc411eeddd0741b2e",
+    "val.csv": "a2fc12efd09e793a4f26135d2bdc193a44d20b4520ac3477e0e5ee46ba631885",
+    "test.csv": "292f333ed4fc5fedbbf06e643d783703f327d22b1c5a22543bc4321116b55dfc",
+    "protected_attributes.csv": "9db174ae5b9138c2acf4bb7e1a276ac8927a71478eeec24ff606c59f8be2170a"
+  },
+  "git_commit": "0f65560bfea0646cc13383afb46e58401759da8a",
+  "label_leakage_check": {
+    "baseline_accuracy": 0.7828,
+    "baseline_macro_f1": 0.7704,
+    "per_class_recall": {
+      "low": 0.8614,
+      "medium": 0.8128,
+      "high": 0.6371
+    },
+    "per_class_f1": {
+      "low": 0.8773,
+      "medium": 0.6626,
+      "high": 0.7712
+    },
+    "confusion_matrix": {
+      "low": {
+        "low": 690,
+        "medium": 111,
+        "high": 0
+      },
+      "medium": {
+        "low": 80,
+        "medium": 382,
+        "high": 8
+      },
+      "high": {
+        "low": 2,
+        "medium": 190,
+        "high": 337
+      }
+    },
+    "is_circular": false,
+    "explanation": "Baseline accuracy is 78.3% (strictly non-circular). Linear baseline formula encounters natural errors on boundary and non-linear interaction cases (e.g. high engagement with weak assessment), providing legitimate comparative headroom for neural classifiers."
+  }
+}

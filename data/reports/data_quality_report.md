@@ -25,11 +25,11 @@ This report records how the Student Performance and Academic Intervention System
 | Missing values in `assignment_pct` | 12 |
 | Missing values in `engagement_score` | 12 |
 | Missing values in `prior_performance_pct` | 12 |
-| Total missing values | 60 |
-| Duplicate rows | 5 |
-| Low risk records | 5,340 |
-| Medium risk records | 3,132 |
-| High risk records | 3,528 |
+| Total missing values | 60 (across 12 records) |
+| Duplicate rows | 5 (1 high risk, 4 medium risk) |
+| Raw Low risk records | 5,339 (44.47%) |
+| Raw Medium risk records | 3,139 (26.15%) |
+| Raw High risk records | 3,527 (29.38%) |
 
 ## Cleaning Method
 - The original raw CSV was preserved unchanged in `data/raw/`.

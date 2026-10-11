@@ -1,0 +1,9 @@
+Generating 12000 academic records with seed=42...
+Saved full dataset: data\processed\dataset.csv (12000 rows)
+Saved train set:    data\processed\train.csv (8400 rows)
+Saved val set:      data\processed\val.csv (1800 rows)
+Saved test set:     data\processed\test.csv (1800 rows)
+Saved protected attributes: data\processed\protected_attributes.csv (12000 rows)
+Baseline Accuracy on Test: 78.28%
+Baseline Macro F1 on Test: 0.7704
+Saved dataset manifest: data\processed\manifest.json

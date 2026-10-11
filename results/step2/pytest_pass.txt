@@ -1,0 +1,28 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\Abhishek\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Abhishek\Capstone Project
+plugins: anyio-4.14.2, asyncio-1.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 18 items
+
+tests/test_dataset.py::test_processed_files_exist PASSED                 [  5%]
+tests/test_dataset.py::test_all_splits_pass_schema_validation[file_path0] PASSED [ 11%]
+tests/test_dataset.py::test_all_splits_pass_schema_validation[file_path1] PASSED [ 16%]
+tests/test_dataset.py::test_all_splits_pass_schema_validation[file_path2] PASSED [ 22%]
+tests/test_dataset.py::test_all_splits_pass_schema_validation[file_path3] PASSED [ 27%]
+tests/test_dataset.py::test_record_counts_and_split_ratios PASSED        [ 33%]
+tests/test_dataset.py::test_stratification_consistency PASSED            [ 38%]
+tests/test_dataset.py::test_protected_attributes_isolation_and_privacy PASSED [ 44%]
+tests/test_dataset.py::test_sha256_manifest_integrity PASSED             [ 50%]
+tests/test_dataset.py::test_non_circular_baseline_performance PASSED     [ 55%]
+tests/test_starter_cases.py::test_sample_file_validation_passes PASSED   [ 61%]
+tests/test_starter_cases.py::test_invalid_file_validation_fails PASSED   [ 66%]
+tests/test_starter_cases.py::test_mandatory_golden_cases[STU-001-86.5-low] PASSED [ 72%]
+tests/test_starter_cases.py::test_mandatory_golden_cases[STU-002-65.1-medium] PASSED [ 77%]
+tests/test_starter_cases.py::test_mandatory_golden_cases[STU-003-40.0-high] PASSED [ 83%]
+tests/test_starter_cases.py::test_mandatory_golden_cases[STU-004-61.7-medium] PASSED [ 88%]
+tests/test_starter_cases.py::test_mandatory_golden_cases[STU-005-62.0-medium] PASSED [ 94%]
+tests/test_starter_cases.py::test_boundary_case_stu_011 PASSED           [100%]
+
+============================= 18 passed in 1.41s ==============================
