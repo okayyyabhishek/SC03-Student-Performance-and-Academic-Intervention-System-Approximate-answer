@@ -7,6 +7,7 @@ A decision-support app that estimates an academic **risk band** (low, medium, hi
 **Status:** Step 1 (project preparation). No neural network or app yet. See `docs/STEP-1.md`.
 
 ## Data Dictionary
+The Data Dictionary Used is-
 
 | Field | Simple meaning | Type/unit | Starter rule |
 | :--- | :--- | :--- | :--- |
