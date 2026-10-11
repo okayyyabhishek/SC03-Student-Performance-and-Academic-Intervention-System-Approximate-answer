@@ -207,9 +207,9 @@ If the processed splits are missing, review [Step 2 documentation](docs/STEP-2.m
 - A prediction is not a diagnosis or an official academic decision. A qualified human must consider context before any intervention.
 - Do not use the system to automate punishment, disciplinary decisions, or public student rankings.
 
-## Roadmap
+## Roadmaps
 
-The repository's project contract describes later work such as baseline comparison, additional neural methods (including Perceptron and ADALINE), error analysis, noise robustness, fairness evaluation, and application integration. These should be treated as roadmap items unless the corresponding implementation and evidence are present on a branch.
+The repository's project contract describes later work such as baseline comparison, additional neural methods (including Perceptron and ADALINE), error analysis, noise robustness, fairness evaluation, and application integation. These should be treated as roadmap items unless the corresponding implementation and evidence are present on a branch.
 
 ## Contributing and milestone workflow
 
