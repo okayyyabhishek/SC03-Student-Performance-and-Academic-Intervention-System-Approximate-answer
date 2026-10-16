@@ -83,7 +83,18 @@ Outputs are strictly decoupled from model internals when presented to different 
 
 ---
 
-## 3. Starter Sample Composition (`data/sample_input.csv`)
+## 3. Distinction: Simulated Starter Cases vs. Real Student Records
+
+> [!IMPORTANT]
+> **Strict Non-Conflation Policy:**
+> `data/sample_input.csv` contains **simulated synthetic starter test cases** manually authored by the team to verify schema validation and baseline computation.
+> - **They are NOT real student records:** The figures and labels represent educational scenarios designed to test edge cases, not empirical measurements of actual human students.
+> - **Zero PII Mandate:** Real student names, email addresses, phone numbers, enrollment numbers, or roll numbers are strictly forbidden and never collected or stored.
+> - **Candidate Benchmark Data (Step 2):** When scaling to 10,000+ records in Step 2, records will originate from vetted, publicly licensed de-identified educational corpora (e.g., Open University Learning Analytics Dataset - OULAD, CC BY 4.0) or reproducible mathematical scenario generators with documented non-circular ground truth.
+
+---
+
+## 4. Starter Sample Composition (`data/sample_input.csv`)
 
 The 20 starter rows represent four distinct real-world student categories:
 
@@ -155,10 +166,10 @@ Splits were constructed using stratified random sampling partitioned strictly ac
 - `protected_attributes.csv`: `9db174ae5b9138c2acf4bb7e1a276ac8927a71478eeec24ff606c59f8be2170a`
 
 ### 4.8 Step 2 Evidence & Verification Reports
-- **Data Quality Report:** [data/reports/data_quality_report.md](file:///c:/Users/Abhishek/Capstone%20Project/data/reports/data_quality_report.md)
-- **Executed Jupyter Notebook:** [notebooks/01_data_inspection.ipynb](file:///c:/Users/Abhishek/Capstone%20Project/notebooks/01_data_inspection.ipynb)
-- **Scenario Generation Report:** [data/reports/generated_scenarios_report.md](file:///c:/Users/Abhishek/Capstone%20Project/data/reports/generated_scenarios_report.md)
-- **Dataset Manifest:** [data/processed/manifest.json](file:///c:/Users/Abhishek/Capstone%20Project/data/processed/manifest.json)
+- **Data Quality Report:** [`reports/data_quality_report.md`](reports/data_quality_report.md)
+- **Executed Jupyter Notebook:** [`../notebooks/01_data_inspection.ipynb`](../notebooks/01_data_inspection.ipynb)
+- **Scenario Generation Report:** [`reports/generated_scenarios_report.md`](reports/generated_scenarios_report.md)
+- **Dataset Manifest:** [`processed/manifest.json`](processed/manifest.json)
 
 ---
 

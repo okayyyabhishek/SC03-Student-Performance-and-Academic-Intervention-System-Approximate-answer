@@ -24,6 +24,7 @@ Mentors often notice struggling students late in a semester, after marks have al
    - **Faculty Mentor:** Assigned cohort only, pseudonymous records, runs assessments, manages interventions.
    - **Student:** Own record only, supportive wording, no peer comparison or model internals.
 6. **Design Discipline:** Strict typography (Literata serif headings, Atkinson Hyperlegible body, IBM Plex Mono code) and dual light/dark themes shipping together.
+7. **Simulated Starter Cases vs. Real Records:** The 20 starter rows in `data/sample_input.csv` are strictly simulated synthetic test scenarios constructed to test validator logic and baseline math. They are **not real student records** and must never be conflated with real student data. Real student identifiers (PII) are strictly prohibited.
 
 ---
 
@@ -31,14 +32,12 @@ Mentors often notice struggling students late in a semester, after marks have al
 
 Roles rotate across project steps to prevent knowledge silos and ensure all members can defend every component in viva examinations:
 
-| Member | Assigned Role | Step 1 Focus | Milestone Focus (M1 / M2) |
-|---|---|---|---|
-| **Member A** | Repository & Backend Lead | Repository architecture, environment setup, Git workflow | FastAPI backend, RBAC middleware, Docker, deployment |
-| **Member B** | Data & ML Lead | Data dictionary, 20-row sample data, source citations | 10k+ pipeline, NumPy ADALINE & Backprop training, metrics |
-| **Member C** | Baseline & ML Support | Weighted baseline rules, golden test checks, pseudocode | Baseline engine, model comparison, noise & fairness audit |
-| **Member D** | Testing & UI Lead | Data validation scripts, UI wireframe sketch, test evidence | React frontend, Design System token adherence, WCAG a11y |
-
-*(Note: For 3-member teams, Repository Lead and Testing/UI Lead are merged).*
+| Member | Real Name | GitHub Username | Assigned Role | Step 1 Focus | Milestone Focus (M1 / M2) |
+|---|---|---|---|---|---|
+| **Member 1** | **Abhishek** | [`@okayyyabhishek`](https://github.com/okayyyabhishek) | Repository & Backend Lead | Repository architecture, environment setup, Git workflow, verification | FastAPI backend, RBAC middleware, Docker, deployment |
+| **Member 2** | **Saumya Rawat** | [`@saumyaarawatt`](https://github.com/saumyaarawatt) | Data & ML Lead | Data dictionary, 20-row simulated sample, source citations, bounds | 10k+ pipeline, NumPy ADALINE & Backprop training, metrics |
+| **Member 3** | **Aman Sharma** | [`@amansharma-link`](https://github.com/amansharma-link) | Baseline & ML Support | Weighted baseline rules, golden test checks, pseudocode documentation | Baseline engine, model comparison, noise & fairness audit |
+| **Member 4** | **Riya Gupta** | [`@riyargupta09-star`](https://github.com/riyargupta09-star) | Testing & UI Lead | Data validation scripts, UI wireframe sketch, PASS/FAIL test evidence | React frontend, Design System token adherence, WCAG a11y |
 
 ---
 

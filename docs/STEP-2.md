@@ -8,7 +8,7 @@
 
 ## 1. Overview & Objectives
 
-In accordance with Guide Step 2, [docs/IMPLEMENTATION_PLAN.md](file:///c:/Users/Abhishek/Capstone%20Project/docs/IMPLEMENTATION-PLAN.md), and technical requirements TR-010 through TR-015:
+In accordance with Guide Step 2, Implementation Plan roadmap, and technical requirements TR-010 through TR-015:
 - We scaled from the 20-row starter sample to an official **12,000-record** benchmark dataset.
 - We constructed an offline, fully reproducible generation pipeline (`src/pipeline/build_dataset.py`) seeded at `42`.
 - We enforced an **independent non-circular ground-truth target** via latent aptitude modeling, non-linear interaction penalties, and external life noise (TR-012).
