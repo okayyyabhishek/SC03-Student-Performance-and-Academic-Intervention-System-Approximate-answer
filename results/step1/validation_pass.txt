@@ -1,0 +1,6 @@
+file: data/sample_input.csv
+shape: (20, 7)
+columns: ['record_id', 'attendance_pct', 'assessment_pct', 'assignment_pct', 'engagement_score', 'prior_performance_pct', 'risk_label']
+missing values: {'record_id': 0, 'attendance_pct': 0, 'assessment_pct': 0, 'assignment_pct': 0, 'engagement_score': 0, 'prior_performance_pct': 0, 'risk_label': 0}
+STEP 1 DATA CHECK PASSED
+exit code: 0

@@ -1,0 +1,13 @@
+file: data/invalid_cases.csv
+shape: (4, 7)
+columns: ['record_id', 'attendance_pct', 'assessment_pct', 'assignment_pct', 'engagement_score', 'prior_performance_pct', 'risk_label']
+missing values: {'record_id': 0, 'attendance_pct': 0, 'assessment_pct': 1, 'assignment_pct': 0, 'engagement_score': 0, 'prior_performance_pct': 0, 'risk_label': 0}
+VALIDATION FAILED: 7 problem(s) found
+  1. Row STU-021: assessment_pct is missing
+  2. Row STU-022: assignment_pct must be a number, got "abc"
+  3. Row STU-BAD: attendance_pct must be between 0 and 100, got 112
+  4. Row STU-BAD: engagement_score must be between 0 and 10, got -1
+  5. Row STU-BAD: risk_label must be low, medium or high, got critical
+  6. Row STU-BAD: record_id must look like STU-001, got STU-BAD
+  7. Duplicate record_id: STU-022
+exit code: 1
