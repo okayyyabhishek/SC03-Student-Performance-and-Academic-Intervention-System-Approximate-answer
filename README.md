@@ -110,9 +110,48 @@ python src/validate_data.py data/sample_input.csv
 python src/validate_data.py data/invalid_cases.csv
 ```
 
+### 3. Run Step 2 Data Pipeline & Quality Profiling
+Generate clean stratified 70/15/15 splits, data quality report, and verification manifest:
+```powershell
+python src/pipeline/build_dataset.py
+python src/pipeline/profile_dataset.py
+```
+- Documentation: [`docs/STEP-2.md`](docs/STEP-2.md)
+- Data Quality Report: [`data/reports/data_quality_report.md`](data/reports/data_quality_report.md)
+
+### 4. Run Step 3 Artificial Neural Network (ANN)
+Train the multi-layer feed-forward neural network with backpropagation and evaluate on test data:
+```powershell
+python src/train_ann.py
+```
+- Documentation: [`docs/STEP-3.md`](docs/STEP-3.md)
+- Executed Notebook: [`notebooks/02_ann_model.ipynb`](notebooks/02_ann_model.ipynb)
+- Model Artifact: [`models/ann_student_performance.pkl`](models/ann_student_performance.pkl)
+
+### 5. Run Step 4 Simple Baseline & Empirical Model Comparison
+Evaluate the deterministic weighted baseline on the sealed test set ($N=1,800$) and generate comparative metrics:
+```powershell
+# Full test set evaluation and comparison plot generation:
+python src/baseline.py --evaluate
+
+# Single-student CLI prediction:
+python src/baseline.py --attendance 45.0 --assessment 38.0 --assignment 50.0 --engagement 3.5 --prior 52.0
+
+# Automated Step 4 unit tests:
+python -m pytest tests/test_baseline.py -v
+```
+- Documentation: [`docs/STEP-4.md`](docs/STEP-4.md)
+- Executed Notebook: [`notebooks/03_baseline.ipynb`](notebooks/03_baseline.ipynb)
+- Comparison Metrics: [`data/reports/step4_comparison_metrics.csv`](data/reports/step4_comparison_metrics.csv)
+- Full Predictions Table: [`data/reports/step4_test_comparison_full.csv`](data/reports/step4_test_comparison_full.csv)
+- Visual Artifacts:
+  - Confusion Matrix Comparison: [`results/step4_baseline_confusion_matrix.png`](results/step4_baseline_confusion_matrix.png)
+  - Model Performance Bar Chart: [`results/step4_model_comparison_bar.png`](results/step4_model_comparison_bar.png)
+  - Twin Read Cases: [`results/step4_twin_read_cases.png`](results/step4_twin_read_cases.png)
+
 ---
 
 ## 6. Milestone Plan
 
-- **M1 (Mid-Semester):** Deliver working Product V1: anonymous input → validation → baseline score & ADALINE neural classifier → Twin Read visual comparison → supportive intervention recommendation.
+- **M1 (Mid-Semester):** Deliver working Product V1: anonymous input → validation → baseline score & ADALINE/ANN neural classifier → Twin Read visual comparison → supportive intervention recommendation.
 - **M2 (End-Semester):** Implement and compare Perceptron, ADALINE, and Backpropagation; study error patterns, class imbalance, noise robustness, and fairness; deploy Product V2 publicly with full viva evidence package.

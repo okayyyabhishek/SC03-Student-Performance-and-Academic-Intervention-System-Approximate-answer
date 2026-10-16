@@ -1,8 +1,8 @@
 # Dataset Profile & Audit Report — Step 2
 
 **Dataset:** SC03 Academic Decision-Support Benchmark Dataset  
-**Source:** Documented Synthetic Scenario Generator (OULAD Benchmark Specification)  
-**Licence:** Creative Commons Attribution 4.0 International (CC BY 4.0)  
+**Source:** Calibrated Parametric Synthetic Generator (src/pipeline/build_dataset.py, seed 42)  
+**Licence:** MIT License (Synthetic Capstone Benchmark - Educational Decision Support)  
 **Total Records:** 12,000 (8,400 train / 1,800 val / 1,800 test)  
 **Missing Values:** 0 across all columns  
 
@@ -82,3 +82,9 @@ This intentional design leaves genuine room for our Step 4 ADALINE neural classi
 | `data/processed/test.csv` | 1,800 | `292f333ed4fc5fedbbf06e643d783703f327d22b1c5a22543bc4321116b55dfc` |
 | `data/processed/protected_attributes.csv` | 12,000 | `9db174ae5b9138c2acf4bb7e1a276ac8927a71478eeec24ff606c59f8be2170a` |
 
+---
+
+## 6. Synthetic Provenance & Evaluation Scope Disclaimer
+- **100% Synthetic Records:** All 12,000 records and labels are synthetically generated; they are not empirical observations from real students or downloaded OULAD data.
+- **Design Inspiration:** OULAD is cited solely as conceptual design inspiration for indicator naming and schemas.
+- **Evaluation Disclaimer:** Model evaluation on synthetic labels derived from simulated rules validates pipeline mechanics, convergence, and non-linear boundary separation, but **does not establish real-world intervention performance** or operational educational efficacy.

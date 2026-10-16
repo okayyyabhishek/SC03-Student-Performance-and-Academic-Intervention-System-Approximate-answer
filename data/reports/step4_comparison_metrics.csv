@@ -1,0 +1,11 @@
+metric,baseline,majority_class,ann,difference,pct_change,definition
+Overall Accuracy,0.7828,0.445,0.8411,0.0583,5.83,"Proportion of all 1,800 test records classified exactly correctly"
+Macro F1,0.7704,0.2053,0.829,0.0587,5.87,"Unweighted arithmetic mean of F1 scores across Low, Medium, High"
+Macro Precision,0.81,0.1483,0.8287,0.0188,1.88,"Unweighted arithmetic mean of precision across Low, Medium, High"
+Macro Recall,0.7704,0.3333,0.8294,0.059,5.9,"Unweighted arithmetic mean of recall across Low, Medium, High"
+High-Risk Recall,0.6371,0.0,0.8941,0.2571,25.71,Recall on high-risk students (critical safety measure: catching struggling students)
+Medium-Risk Recall,0.8128,0.0,0.7128,-0.1,-10.0,Recall on emerging-risk students requiring mentoring or study plan
+Low-Risk Recall,0.8614,1.0,0.8814,0.02,2.0,Recall on on-track students who only require routine monitoring
+High-Risk F1,0.7712,0.0,0.8984,0.1272,12.72,Harmonic mean of precision and recall for high-risk classification
+Medium-Risk F1,0.6626,0.0,0.7023,0.0397,3.97,Harmonic mean of precision and recall for medium-risk classification
+Low-Risk F1,0.8773,0.6159,0.8864,0.0091,0.91,Harmonic mean of precision and recall for low-risk classification

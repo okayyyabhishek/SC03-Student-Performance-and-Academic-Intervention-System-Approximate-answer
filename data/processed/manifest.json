@@ -1,9 +1,35 @@
 {
   "dataset_name": "SC03 Academic Decision-Support Benchmark Dataset",
   "description": "12,000-record pseudonymous academic indicator dataset with independent non-circular ground-truth labels and isolated demographic attributes.",
-  "source_type": "Documented Synthetic Scenario Generator (OULAD Benchmark Specification)",
-  "source_citation": "Open University Learning Analytics Dataset (OULAD) proxy architecture & synthetic scenario benchmark; Kuzilek, Hlosta & Zdrahal (2017) analogue.",
-  "licence": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+  "source_type": "Calibrated Parametric Synthetic Generator (src/pipeline/build_dataset.py, seed 42)",
+  "source_citation": "Synthetic academic decision-support benchmark generated algorithmically for the SC03 Capstone Project. The Open University Learning Analytics Dataset (OULAD; Kuzilek, Hlosta & Zdrahal, 2017) is cited strictly as conceptual and architectural design inspiration for indicator naming and telemetry schemas, not as an empirical data source. No real student observations were accessed, downloaded, or used.",
+  "licence": "MIT License (Synthetic Capstone Benchmark - Educational Decision Support)",
+  "synthetic_nature_notice": "All 12,000 academic records and ground-truth risk labels are 100% synthetic, generated via parametric latent factor simulation. They are not real student observations. Evaluation on labels generated from the same simulated feature rules demonstrates model mechanics and non-linear learning capacity, but does not establish real-world intervention performance.",
+  "test_fixture_note": "data/raw/student_performance_raw.csv (12,005 rows) is a synthetically generated raw test fixture containing 5 duplicate rows and 60 missing values deliberately injected to test and validate pipeline deduplication and median imputation routines; it is not an original source record file.",
+  "generator_and_label_rules": {
+    "latent_factors": "A ~ N(0, 1) (Academic Aptitude), W ~ N(0, 1) (Work Ethic)",
+    "indicators": {
+      "attendance_pct": "clip(72.0 + 15.0*W + 5.0*A + N(0, 12.0), 0.0, 100.0)",
+      "assessment_pct": "clip(64.0 + 18.0*A + 8.0*W + N(0, 14.0), 0.0, 100.0)",
+      "assignment_pct": "clip(66.0 + 12.0*A + 15.0*W + N(0, 13.0), 0.0, 100.0)",
+      "engagement_score": "clip(6.2 + 1.8*W + 0.8*A + N(0, 1.5), 0.0, 10.0)",
+      "prior_performance_pct": "clip(65.0 + 16.0*A + 5.0*W + N(0, 13.0), 0.0, 100.0)"
+    },
+    "composite_score_formula": "0.35*assessment + 0.25*assignment + 0.20*attendance + 0.12*(engagement*10) + 0.08*prior",
+    "interaction_penalties": {
+      "cramming_illusion": "engagement_score >= 7.5 and assessment_pct < 45.0 -> -14.0 penalty",
+      "attendance_spiral": "attendance_pct < 50.0 -> -16.0 penalty",
+      "prior_strength_breakdown": "prior_performance_pct >= 80.0 and attendance_pct < 55.0 -> -12.0 penalty",
+      "dual_coursework_collapse": "assessment_pct < 48.0 and assignment_pct < 48.0 -> -15.0 penalty"
+    },
+    "external_life_noise": "eta ~ N(0.0, 6.0)",
+    "effective_outcome": "composite_score - sum(penalties) + eta",
+    "thresholds": {
+      "high": "effective_outcome < 52.0",
+      "medium": "52.0 <= effective_outcome < 68.0",
+      "low": "effective_outcome >= 68.0"
+    }
+  },
   "generation_date_utc": "2026-10-01T04:04:56.267985+00:00",
   "seed": 42,
   "raw_record_count": 12000,
@@ -39,15 +65,15 @@
   },
   "column_mapping": {
     "record_id": "Unique pseudonymous student identifier (STU-XXXXX)",
-    "attendance_pct": "Classroom attendance percentage (OULAD active-days proxy)",
-    "assessment_pct": "Continuous internal assessment percentage (OULAD TMA analogue)",
-    "assignment_pct": "Homework and laboratory assignment percentage (OULAD CMA analogue)",
-    "engagement_score": "LMS portal engagement activity on 0.0-10.0 scale (OULAD VLE clicks log-scaled)",
+    "attendance_pct": "Classroom attendance percentage (conceptual analogue of OULAD active-days proxy)",
+    "assessment_pct": "Continuous internal assessment percentage (conceptual analogue of OULAD TMA analogue)",
+    "assignment_pct": "Homework and laboratory assignment percentage (conceptual analogue of OULAD CMA analogue)",
+    "engagement_score": "LMS portal engagement activity on 0.0-10.0 scale (conceptual analogue of OULAD VLE clicks log-scaled)",
     "prior_performance_pct": "Prerequisite coursework cumulative performance percentage",
     "risk_label": "Target intervention classification: low, medium, high"
   },
   "proxy_flags": {
-    "attendance_pct": "Simulated attendance tracking proxy (OULAD active-days analogue)",
+    "attendance_pct": "Simulated attendance tracking proxy (conceptual analogue of OULAD active-days)",
     "engagement_score": "Standardized LMS telemetry score (0-10 scale)"
   },
   "protected_attributes_file": "protected_attributes.csv",
