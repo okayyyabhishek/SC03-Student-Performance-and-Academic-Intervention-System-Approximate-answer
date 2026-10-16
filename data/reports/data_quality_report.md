@@ -1,76 +1,135 @@
-# SC03 Data Quality Report
+# SC03 Data Quality & Dataset Provenance Report
 
-## Purpose
-This report records how the Student Performance and Academic Intervention System (SC03) dataset was inspected, cleaned, validated, and split for model development and evaluation.
+## 1. Purpose & Scope
+This report documents the dataset provenance, generation rules, inspection, cleaning, validation, and partitioning methodology for the Student Performance and Academic Intervention System (SC03) Step 2 benchmark dataset.
 
-## Dataset Source
-- **Dataset:** SC03 Student Performance Academic Benchmark
-- **Source:** Open University Learning Analytics Dataset (OULAD) proxy architecture & simulated benchmark (Kuzilek et al., 2017 analogue)
-- **Licence:** Creative Commons Attribution 4.0 International (CC BY 4.0)
-- **Original file:** `data/raw/student_performance_raw.csv`
-- **Original records:** 12,005
-- **Target column:** `risk_label`
-  - `low` = On track / Low academic risk
-  - `medium` = Emerging difficulty / Medium academic risk
-  - `high` = Severe struggle / High academic risk
+---
 
-## Raw-Data Inspection
+## 2. Dataset Provenance & Synthetic Nature Declaration
+- **Dataset Name:** SC03 Student Performance Academic Benchmark
+- **Plain Statement on Synthetic Origin:** **All 12,000 academic records and ground-truth `risk_label` classifications in this dataset are 100% synthetic**, algorithmically generated via `src/pipeline/build_dataset.py` with reproducible random seed `42`.
+- **Not Real Student Observations:** These records are **not empirical observations of real students** and do not represent actual student records from the Open University or any other educational institution. No real student data, human subject experiments, or university administrative databases were accessed or downloaded.
+- **Design Inspiration (OULAD Attribution):** The Open University Learning Analytics Dataset (OULAD; Kuzilek, Hlosta, & Zdrahal, 2017) served strictly as **high-level conceptual and architectural design inspiration** for telemetry indicator definitions and nomenclature (e.g., analogizing LMS portal engagement to VLE click streams, and continuous assessments to TMA/CMA coursework scores). **None of the records, rows, features, or labels were downloaded from OULAD, nor is this dataset an extract or subset of OULAD.**
+  - *Citation for Design Inspiration:* Kuzilek, J., Hlosta, M., & Zdrahal, Z. (2017). *Open University Learning Analytics dataset*. Scientific Data, 4, 170171. https://doi.org/10.1038/sdata.2017.171
+- **Licence & Project Terms:** **Dedicated Synthetic Capstone Benchmark (MIT License / Capstone Academic Use)**. Any previous or inherited Creative Commons Attribution 4.0 (CC BY 4.0) attribution that implied records were downloaded from OULAD is hereby replaced.
 
-| Check | Result |
-|---|---|
-| Rows | 12,005 |
-| Columns | 7 |
-| Missing values in `attendance_pct` | 12 |
-| Missing values in `assessment_pct` | 12 |
-| Missing values in `assignment_pct` | 12 |
-| Missing values in `engagement_score` | 12 |
-| Missing values in `prior_performance_pct` | 12 |
-| Total missing values | 60 (across 12 records) |
-| Duplicate rows | 5 (1 high risk, 4 medium risk) |
-| Raw Low risk records | 5,339 (44.47%) |
-| Raw Medium risk records | 3,139 (26.15%) |
-| Raw High risk records | 3,527 (29.38%) |
+---
 
-## Cleaning Method
-- The original raw CSV was preserved unchanged in `data/raw/`.
-- Cleaning operated on a dedicated in-memory copy (`clean_df = df.copy()`).
-- Missing continuous indicators were imputed using the median of each respective column.
-- Exact duplicate rows were removed using `drop_duplicates()` and index was reset.
-- The cleaned dataset was strictly checked for missing values, range bounds, target categories, and duplicate prevention.
+## 3. Raw Test Fixture Explanation (`data/raw/student_performance_raw.csv`)
+- **Nature of the Raw File:** The 12,005-row file located at `data/raw/student_performance_raw.csv` is a **synthetically generated raw test fixture** designed specifically to test, benchmark, and validate automated pipeline ingestion, validation, and cleaning routines (`src/prepare_data.py`). It is **not an original source record file** from an external institutional database.
+- **Deliberately Introduced Test Conditions:**
+  - **Five Duplicate Rows:** Exactly 5 duplicate student records (1 high-risk, 4 medium-risk duplicates) were **artificially introduced / injected into the raw test fixture** to verify that deduplication (`drop_duplicates()`) correctly detects and removes redundant telemetry rows.
+  - **Sixty Missing Feature Cells:** Exactly 60 null values (12 missing cells in each of the 5 numerical feature columns, spanning 12 distinct rows) were **intentionally injected into the raw test fixture** to verify that median imputation correctly handles missing continuous values prior to strict schema validation.
+- **Raw Test Fixture Summary:**
 
-## Validation Result
-All validation checks passed after cleaning:
-- No required columns were missing (`record_id`, `attendance_pct`, `assessment_pct`, `assignment_pct`, `engagement_score`, `prior_performance_pct`, `risk_label`).
-- No missing values remained (`clean_df.isna().sum().sum() == 0`).
-- All indicator percentages were strictly between `0.0` and `100.0`.
-- All LMS engagement scores were strictly between `0.0` and `10.0`.
-- `risk_label` contained only valid tokens: `low`, `medium`, and `high`.
-- No duplicate rows remained (`0 duplicates`).
+| Metric / Check | Value in Raw Test Fixture | Purpose / Injected Condition |
+|---|---|---|
+| Total Rows | 12,005 | Raw test corpus |
+| Total Columns | 7 | `record_id`, 5 numeric indicators, `risk_label` |
+| Missing `attendance_pct` | 12 | Injected test condition for median imputation |
+| Missing `assessment_pct` | 12 | Injected test condition for median imputation |
+| Missing `assignment_pct` | 12 | Injected test condition for median imputation |
+| Missing `engagement_score` | 12 | Injected test condition for median imputation |
+| Missing `prior_performance_pct` | 12 | Injected test condition for median imputation |
+| Total Missing Cells | 60 | Injected test condition (across 12 records) |
+| Duplicate Rows | 5 | Injected test condition (1 high risk, 4 medium risk) |
+| Raw Low Risk Records | 5,339 (44.47%) | Uncleaned distribution |
+| Raw Medium Risk Records | 3,139 (26.15%) | Uncleaned distribution |
+| Raw High Risk Records | 3,527 (29.38%) | Uncleaned distribution |
 
-## Reproducible Split
-A fixed random seed of `42` was used. The data was split separately for each risk class to preserve identical class distributions across splits:
+---
 
-| Dataset | Rows | Percentage | Purpose |
-|---|---|---|---|
-| `train.csv` | 8,400 | 70.0% | Soft computing model training & weight optimization |
-| `validation.csv` / `val.csv` | 1,800 | 15.0% | Hyperparameter tuning & early stopping checkpointing |
-| `test.csv` | 1,800 | 15.0% | Final unseen evaluation & baseline comparison |
-| **Total Cleaned** | **12,000** | **100.0%** | **Complete cleaned benchmark dataset** |
+## 4. Exact Generator Equations & Ground-Truth Label Rules
+The benchmark dataset was generated offline via `src/pipeline/build_dataset.py` with fixed random seed `42` (`numpy.random.default_rng(seed=42)`):
 
-## Output Files
-The pipeline created the following artifacts in `data/processed/`:
-- `student_performance_clean.csv` (12,000 rows)
-- `dataset.csv` (12,000 rows)
-- `train.csv` (8,400 rows)
-- `validation.csv` (1,800 rows)
-- `val.csv` (1,800 rows)
-- `test.csv` (1,800 rows)
-- `manifest.json` (Cryptographic verification and metadata)
-- `protected_attributes.csv` (Isolated demographic audit records)
+### 4.1 Latent Student Factors
+Each synthetic student record is parameterized by two independent standard-normal latent traits:
+$$A \sim \mathcal{N}(0.0, 1.0) \quad (\text{Academic Aptitude / Prior Competence})$$
+$$W \sim \mathcal{N}(0.0, 1.0) \quad (\text{Work Ethic / Academic Habit & Diligence})$$
 
-## Limitation and Next Action
-The benchmark dataset contains 12,000 valid records. It must not be duplicated and described as new real observations.
-The next step is generating and documenting 1,200 separate stress-testing scenarios. These scenarios will be clearly labelled as generated test scenarios, not real observations.
+### 4.2 Observable Indicator Equations with Measurement Noise
+The 5 observable indicators are generated by linear combinations of $A$ and $W$, corrupted by calibrated Gaussian measurement noise $\epsilon_i$, and bounded to valid domain intervals:
+- **`attendance_pct`**: $\text{clip}(72.0 + 15.0 \cdot W + 5.0 \cdot A + \epsilon_1, 0.0, 100.0), \quad \epsilon_1 \sim \mathcal{N}(0.0, 12.0)$
+- **`assessment_pct`**: $\text{clip}(64.0 + 18.0 \cdot A + 8.0 \cdot W + \epsilon_2, 0.0, 100.0), \quad \epsilon_2 \sim \mathcal{N}(0.0, 14.0)$
+- **`assignment_pct`**: $\text{clip}(66.0 + 12.0 \cdot A + 15.0 \cdot W + \epsilon_3, 0.0, 100.0), \quad \epsilon_3 \sim \mathcal{N}(0.0, 13.0)$
+- **`engagement_score`**: $\text{clip}(6.2 + 1.8 \cdot W + 0.8 \cdot A + \epsilon_4, 0.0, 10.0), \quad \epsilon_4 \sim \mathcal{N}(0.0, 1.5)$
+- **`prior_performance_pct`**: $\text{clip}(65.0 + 16.0 \cdot A + 5.0 \cdot W + \epsilon_5, 0.0, 100.0), \quad \epsilon_5 \sim \mathcal{N}(0.0, 13.0)$
+*(All values rounded to 1 decimal place).*
 
-## Safety Note
-This is an educational decision-support project. Predictions suggest supportive interventions and do not replace human mentor evaluation or official academic decisions.
+### 4.3 Composite Score
+A linear baseline composite score is calculated:
+$$\text{Composite} = 0.35 \cdot \text{assessment} + 0.25 \cdot \text{assignment} + 0.20 \cdot \text{attendance} + 0.12 \cdot (\text{engagement} \times 10) + 0.08 \cdot \text{prior}$$
+
+### 4.4 Four Non-Linear Domain Interaction Penalties
+To simulate non-linear educational outcomes and guarantee non-circularity against the linear baseline:
+1. **Compensatory Illusion (Cramming):** Students clicking the LMS portal frequently ($\text{engagement\_score} \ge 7.5$) but failing exam fundamentals ($\text{assessment\_pct} < 45.0$).  
+   $\implies \text{Penalty} += 14.0$
+2. **Attendance Disengagement Spiral:** Attendance collapses below $50.0\%$, compounding unrecorded quiz failures and missed learning scaffolding.  
+   $\implies \text{Penalty} += 16.0$
+3. **Prior Strength Breakdown:** High prior performance ($\ge 80.0\%$) fails to protect a student when attendance drops below $55.0\%$.  
+   $\implies \text{Penalty} += 12.0$
+4. **Dual Coursework Collapse:** Severe concurrent failure in both continuous assessment and homework assignments ($< 48.0\%$).  
+   $\implies \text{Penalty} += 15.0$
+
+### 4.5 Unobserved External Life Noise
+Unpredictable external hardship (illness, bereavement, personal distress) is injected via zero-mean Gaussian noise:
+$$\eta \sim \mathcal{N}(0.0, 6.0)$$
+
+### 4.6 Latent Effective Outcome & Ground-Truth Risk Labeling
+The composite outcome is adjusted by domain penalties and life noise:
+$$\text{Effective Outcome} = \text{Composite} - \sum \text{Penalties} + \eta$$
+
+Target risk classes are assigned via strict decision thresholds:
+- **$\text{Effective Outcome} < 52.0$** $\implies$ `risk_label` = **`high`** (Severe struggle / Intensive faculty follow-up)
+- **$52.0 \le \text{Effective Outcome} < 68.0$** $\implies$ `risk_label` = **`medium`** (Emerging difficulty / Mentoring or study plan)
+- **$\text{Effective Outcome} \ge 68.0$** $\implies$ `risk_label` = **`low`** (On track / Monitor routine progress)
+
+---
+
+## 5. Cleaning Method & Pipeline Verification
+- Cleaning operates strictly on an in-memory copy (`clean_df = raw_df.copy()`).
+- Injected missing continuous indicator values are imputed using column medians.
+- Injected duplicate records are removed via `drop_duplicates()`.
+- Post-cleaning validation confirmed:
+  - Zero missing values remaining across all columns (`0 missing`).
+  - Zero duplicate rows (`0 duplicates`).
+  - All indicator values strictly satisfy valid operational ranges ($[0, 100]$ for percentages, $[0, 10]$ for engagement score).
+  - Cleaned volume: exactly **12,000 valid records** (exceeding $\ge 10,000$ course guide threshold by $+20.0\%$).
+
+---
+
+## 6. Reproducible Stratified Split
+Splits were constructed using stratified random sampling across `risk_label` classes with seed `42`:
+
+| Split | Rows | Percentage | Class Distribution (`low` / `medium` / `high`) | Purpose |
+|---|---|---|---|---|
+| `train.csv` | 8,400 | 70.0% | 3,737 (44.49%) / 2,195 (26.13%) / 2,468 (29.38%) | Soft computing model training & parameter fitting |
+| `val.csv` / `validation.csv` | 1,800 | 15.0% | 801 (44.50%) / 470 (26.11%) / 529 (29.39%) | Hyperparameter tuning & early stopping checkpointing |
+| `test.csv` | 1,800 | 15.0% | 801 (44.50%) / 470 (26.11%) / 529 (29.39%) | Sealed test set for unseen model evaluation |
+| **Total Cleaned** | **12,000** | **100.0%** | **5,339 (44.49%) / 3,135 (26.13%) / 3,526 (29.38%)** | **Complete cleaned benchmark dataset** |
+
+- Partition disjointness verified: $\text{train} \cap \text{val} = \emptyset$, $\text{train} \cap \text{test} = \emptyset$, $\text{val} \cap \text{test} = \emptyset$.
+- Stratification deviation across splits is $< 0.02\%$.
+
+---
+
+## 7. Baseline Leakage Check (Non-Circularity Proof)
+Evaluating the deterministic linear baseline against the sealed 1,800-row `test.csv` split:
+- **Baseline Accuracy:** **78.28%**
+- **Baseline Macro F1:** **0.7704**
+- **Non-Circularity Status:** **PASS (Strictly non-circular; $0.65 \le \text{Accuracy} \le 0.85$).**
+- **Analysis:** The linear baseline misclassifies 190 truly high-risk students as medium risk due to linear averaging on cramming and attendance breakdown cases, establishing authentic comparative headroom for neural classifiers.
+
+---
+
+## 8. Methodological Scope & Real-World Evaluation Disclaimer
+> [!WARNING]
+> **CRITICAL METHODOLOGICAL DISCLAIMER ON SYNTHETIC EVALUATION:**  
+> 1. **Internal Technical Validation Only:** Evaluating predictive models (linear baseline, ADALINE, Backpropagation MLPs) on labels generated from the same simulated feature rules demonstrates algorithmic convergence, training pipeline mechanics, and mathematical capacity to learn non-linear boundaries.
+> 2. **Does NOT Establish Real-World Intervention Performance:** High accuracy or F1-scores on these synthetic labels **do not establish or validate real-world intervention efficacy, student retention improvement, or clinical decision validity in an actual academic institution.**
+> 3. **Real-World Complexities:** Live academic interventions involve complex human, social, and emotional factors that cannot be simulated. Operational deployment requires prospective institutional trials, faculty ethics oversight, and continuous empirical validation.
+
+---
+
+## 9. Safety Note & Ethical Decision Support
+This system is strictly an **educational decision-support advisory tool**. Model predictions recommend supportive faculty interventions (such as mentoring or study plans) and **must never** automate punitive measures, disciplinary actions, or official grading decisions without human faculty review.

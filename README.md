@@ -27,18 +27,16 @@ Mentors often notice struggling students late in a semester, after marks have al
 
 ---
 
-## 3. Team Responsibilities (Step 1)
+## 3. Team Members & Responsibilities
 
 Roles rotate across project steps to prevent knowledge silos and ensure all members can defend every component in viva examinations:
 
-| Member | Assigned Role | Step 1 Focus | Milestone Focus (M1 / M2) |
+| Member | Assigned Role | Primary Responsibilities | Milestone Focus (M1 / M2) |
 |---|---|---|---|
-| **Member A** | Repository & Backend Lead | Repository architecture, environment setup, Git workflow | FastAPI backend, RBAC middleware, Docker, deployment |
-| **Member B** | Data & ML Lead | Data dictionary, 20-row sample data, source citations | 10k+ pipeline, NumPy ADALINE & Backprop training, metrics |
-| **Member C** | Baseline & ML Support | Weighted baseline rules, golden test checks, pseudocode | Baseline engine, model comparison, noise & fairness audit |
-| **Member D** | Testing & UI Lead | Data validation scripts, UI wireframe sketch, test evidence | React frontend, Design System token adherence, WCAG a11y |
-
-*(Note: For 3-member teams, Repository Lead and Testing/UI Lead are merged).*
+| **Abhishek** (`@okayyyabhishek`) | Repository & Backend Lead | Repository architecture, environment setup, Git workflow, CI pipelines | FastAPI backend, RBAC middleware, Docker, deployment |
+| **Saumya Rawat** (`@saumyaarawatt`) | Data & ML Lead | Data dictionary, 12k synthetic pipeline, data quality report, manifest | NumPy ADALINE & Backprop training, loss optimization |
+| **Aman Sharma** (`@amansharma-link`) | Baseline & ML Support | Weighted baseline rules, non-circular ground truth math, pseudocode | Baseline engine, model comparison, noise & fairness audit |
+| **Riya Gupta** (`@riyargupta09-star`) | Testing & UI Lead | Data validation scripts, UI wireframe sketch, test evidence | React frontend, Design System token adherence, WCAG a11y |
 
 ---
 
@@ -110,6 +108,25 @@ python src/validate_data.py data/sample_input.csv
 # Invalid fixture (prints clear validation errors):
 python src/validate_data.py data/invalid_cases.csv
 ```
+
+### 3. Run Step 2 Data Verification & Test Suite
+Verify that all 12,000 synthetic records and partitions satisfy the contract and automated test suite:
+```powershell
+# Validate all partitions:
+python src/validate_data.py data/processed/train.csv
+python src/validate_data.py data/processed/val.csv
+python src/validate_data.py data/processed/test.csv
+
+# Run automated Step 2 test suite (10 tests):
+python -m pytest -v tests/test_dataset.py
+```
+
+### Direct Dataset & Step 2 Evidence Links
+- **Data Dictionary & Synthetic Generation Rules:** [`data/README.md`](data/README.md)
+- **Data Quality & Provenance Report:** [`data/reports/data_quality_report.md`](data/reports/data_quality_report.md)
+- **Dataset Manifest:** [`data/processed/manifest.json`](data/processed/manifest.json)
+- **Step 2 Contract & Evidence:** [`docs/STEP-2.md`](docs/STEP-2.md)
+- **Dataset Profile Report:** [`results/step2/dataset_profile.md`](results/step2/dataset_profile.md)
 
 ---
 

@@ -8,13 +8,14 @@
 
 ## 1. Overview & Objectives
 
-In accordance with Guide Step 2, [docs/IMPLEMENTATION_PLAN.md](file:///c:/Users/Abhishek/Capstone%20Project/docs/IMPLEMENTATION-PLAN.md), and technical requirements TR-010 through TR-015:
-- We scaled from the 20-row starter sample to an official **12,000-record** benchmark dataset.
-- We constructed an offline, fully reproducible generation pipeline (`src/pipeline/build_dataset.py`) seeded at `42`.
-- We enforced an **independent non-circular ground-truth target** via latent aptitude modeling, non-linear interaction penalties, and external life noise (TR-012).
-- We partitioned the data into an exact **stratified 70 / 15 / 15 split** (`train.csv`, `val.csv`, `test.csv`) (TR-013).
-- We decoupled demographic attributes into an isolated file (`data/processed/protected_attributes.csv`) strictly excluded from training features (TR-014).
-- We produced a cryptographic manifest (`data/processed/manifest.json`) recording parameters, proxy flags, class counts, and SHA-256 checksums (TR-011).
+In accordance with Faculty Course Guide Step 2 and technical requirements TR-010 through TR-015:
+- **100% Synthetic Benchmark Corpus:** Scaled from the 20-row starter sample to an official **12,000-record** benchmark dataset. **All 12,000 records and labels are synthetic**, algorithmically generated via `src/pipeline/build_dataset.py` (seed 42), and are **not real student observations** or downloaded institutional data.
+- **Raw Test Fixture (`data/raw/student_performance_raw.csv`):** The 12,005-row file is a **synthetically generated raw test fixture** containing 5 duplicate rows and 60 missing feature cells deliberately injected to validate pipeline deduplication (`drop_duplicates()`) and median imputation logic; it is **not an original source record file**.
+- **Design Inspiration (OULAD Attribution):** OULAD (Kuzilek et al., 2017) is cited solely as **conceptual and architectural design inspiration** for telemetry feature definitions (e.g., active interaction days, continuous assessments, and LMS engagement clicks). No records were downloaded from OULAD.
+- **Independent Non-Circular Ground Truth:** Enforced via latent aptitude modeling ($A, W \sim \mathcal{N}(0, 1)$), four non-linear interaction penalties, and external life noise (TR-012).
+- **Stratified Partitioning:** Partitioned into an exact **stratified 70 / 15 / 15 split** (`train.csv`, `val.csv`, `test.csv`) (TR-013).
+- **Protected Attribute Decoupling:** Isolated demographic attributes into `data/processed/protected_attributes.csv`, strictly excluded from training features (TR-014).
+- **Cryptographic Manifest:** Produced a verifiable manifest (`data/processed/manifest.json`) recording parameters, proxy flags, generator rules, class counts, and SHA-256 checksums (TR-011).
 
 ---
 
@@ -127,3 +128,14 @@ python src/pipeline/profile_dataset.py
 # 4. Run automated test suite
 python -m pytest -v tests/test_dataset.py
 ```
+
+---
+
+## 8. Methodological Scope & Real-World Evaluation Disclaimer
+
+> [!WARNING]
+> **CRITICAL METHODOLOGICAL DISCLAIMER ON SYNTHETIC EVALUATION:**  
+> 1. **Pipeline & Mechanics Validation Only:** Evaluating baseline algorithms, ADALINE, Backpropagation MLPs, or any other machine learning models on ground-truth labels generated from the same simulated feature rules demonstrates algorithmic convergence, pipeline mechanics, and the capacity of non-linear models to separate complex interaction surfaces that linear heuristics fail on.
+> 2. **Does NOT Establish Real-World Intervention Performance:** Performance metrics (accuracy, F1-score, recall) achieved on these synthetic labels **do not establish or validate real-world intervention efficacy, student outcome improvement, or operational reliability in a live institutional setting.**
+> 3. **Real-World Complexities:** Real students exhibit psychological, socioeconomic, pedagogic, and institutional behaviors that cannot be fully captured by synthetic mathematical generators. Actual deployment requires prospective institutional trials, ethical review board oversight, mentor validation, and longitudinal observational follow-ups.
+

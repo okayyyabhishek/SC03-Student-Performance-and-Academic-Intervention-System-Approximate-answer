@@ -191,6 +191,12 @@ This intentional design leaves genuine room for our Step 4 ADALINE neural classi
 | `data/processed/test.csv` | 1,800 | `{manifest['sha256']['test.csv']}` |
 | `data/processed/protected_attributes.csv` | 12,000 | `{manifest['sha256']['protected_attributes.csv']}` |
 
+---
+
+## 6. Synthetic Provenance & Evaluation Scope Disclaimer
+- **100% Synthetic Records:** All 12,000 records and labels are synthetically generated; they are not empirical observations from real students or downloaded OULAD data.
+- **Design Inspiration:** OULAD is cited solely as conceptual design inspiration for indicator naming and schemas.
+- **Evaluation Disclaimer:** Model evaluation on synthetic labels derived from simulated rules validates pipeline mechanics, convergence, and non-linear boundary separation, but **does not establish real-world intervention performance** or operational educational efficacy.
 """
     md_out = res_path / "dataset_profile.md"
     with open(md_out, "w", encoding="utf-8") as f:
