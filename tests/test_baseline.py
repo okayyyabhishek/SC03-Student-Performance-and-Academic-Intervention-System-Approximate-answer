@@ -224,3 +224,14 @@ def test_explicit_alignment_check():
     with pytest.raises(ValueError, match="Feature 'attendance_pct' values do not align"):
         verify_and_align_test_data(df_test, df_ann_bad_feat)
 
+
+def test_compare_baseline_entrypoint():
+    """Verify that src/compare_baseline.py is importable and functional."""
+    from src.compare_baseline import evaluate_on_test_set
+    results = evaluate_on_test_set()
+    assert "baseline_accuracy" in results
+    assert "ann_accuracy" in results
+    assert results["baseline_accuracy"] == pytest.approx(0.7828, abs=1e-4)
+    assert results["ann_accuracy"] == pytest.approx(0.8411, abs=1e-4)
+
+

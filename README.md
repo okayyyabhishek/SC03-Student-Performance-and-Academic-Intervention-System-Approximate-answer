@@ -133,6 +133,8 @@ Evaluate the deterministic weighted baseline on the sealed test set ($N=1,800$) 
 ```powershell
 # Full test set evaluation and comparison plot generation:
 python src/baseline.py --evaluate
+# Or via standard guide entry point:
+python src/compare_baseline.py
 
 # Single-student CLI prediction:
 python src/baseline.py --attendance 45.0 --assessment 38.0 --assignment 50.0 --engagement 3.5 --prior 52.0

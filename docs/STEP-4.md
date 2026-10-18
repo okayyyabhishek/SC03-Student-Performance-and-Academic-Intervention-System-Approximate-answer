@@ -85,7 +85,7 @@ Total               524               792               484           1,800
 ## 5. Evidence Artifacts
 All generated evaluation artifacts are checked into the repository:
 1. **Interactive Notebook:** [`../notebooks/03_baseline.ipynb`](../notebooks/03_baseline.ipynb) — Executed notebook with complete outputs and side-by-side visualizations.
-2. **Implementation Module:** [`../src/baseline.py`](../src/baseline.py) — Standalone Python script supporting programmatic alignment checks, full test evaluation, and single-record CLI inference.
+2. **Implementation Module:** [`../src/baseline.py`](../src/baseline.py) (and standard entry point [`../src/compare_baseline.py`](../src/compare_baseline.py)) — Standalone Python script supporting programmatic alignment checks, full test evaluation, and single-record CLI inference.
 3. **Automated Unit Tests:** [`../tests/test_baseline.py`](../tests/test_baseline.py) — 7 unit tests covering scoring formulas, cutoffs, 5 golden cases, test split metrics, and explicit dataset alignment.
 4. **Comparative Metrics Table:** [`../data/reports/step4_comparison_metrics.csv`](../data/reports/step4_comparison_metrics.csv) — Formal metric comparison table with definitions and percentage changes.
 5. **Full Prediction Records:** [`../data/reports/step4_test_comparison_full.csv`](../data/reports/step4_test_comparison_full.csv) — 1,800 rows containing ground truth, baseline scores, baseline predictions, and ANN predictions.
@@ -151,6 +151,8 @@ Below are representative cases from [`../data/reports/step4_test_comparison_full
 ### A. Run Full Baseline Evaluation & Generate Artifacts
 ```powershell
 python src/baseline.py --evaluate
+# Or run using the standard course guide entry point:
+python src/compare_baseline.py
 ```
 
 ### B. Run Single-Record Interactive Prediction
