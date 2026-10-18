@@ -19,6 +19,7 @@ from src.baseline import (
     calculate_baseline_score,
     classify_risk,
     predict_single,
+    verify_and_align_test_data,
     INTERVENTIONS,
 )
 
@@ -27,6 +28,7 @@ DATA_DIR = ROOT / "data" / "processed"
 TEST_FILE = DATA_DIR / "test.csv"
 COMPARISON_FILE = ROOT / "data" / "reports" / "step4_test_comparison_full.csv"
 METRICS_FILE = ROOT / "data" / "reports" / "step4_comparison_metrics.csv"
+ANN_PRED_FILE = ROOT / "data" / "reports" / "step3_test_predictions.csv"
 
 
 def test_baseline_score_calculation():
@@ -187,3 +189,38 @@ def test_comparison_csv_artifacts_exist():
     assert "baseline" in df_metrics.columns
     assert "ann" in df_metrics.columns
     assert "difference" in df_metrics.columns
+
+
+def test_explicit_alignment_check():
+    """Verify that verify_and_align_test_data enforces row-ID, label, and feature alignment."""
+    df_test = pd.read_csv(TEST_FILE)
+    df_ann = pd.read_csv(ANN_PRED_FILE)
+
+    # 1. Valid datasets must pass without error and return 1,800 records
+    aligned_test, aligned_ann = verify_and_align_test_data(df_test, df_ann)
+    assert len(aligned_test) == 1800
+    assert len(aligned_ann) == 1800
+    assert (aligned_test["record_id"].values == aligned_ann["record_id"].values).all()
+
+    # 2. Length mismatch must raise ValueError
+    with pytest.raises(ValueError, match="Row count mismatch"):
+        verify_and_align_test_data(df_test.iloc[:-1], df_ann)
+
+    # 3. Altered record_id must raise ValueError
+    df_ann_bad_id = df_ann.copy()
+    df_ann_bad_id.loc[0, "record_id"] = "STU-CORRUPTED"
+    with pytest.raises(ValueError, match="Record ID mismatch"):
+        verify_and_align_test_data(df_test, df_ann_bad_id)
+
+    # 4. Altered risk_label must raise ValueError
+    df_ann_bad_label = df_ann.copy()
+    df_ann_bad_label.loc[0, "risk_label"] = "low" if df_ann.loc[0, "risk_label"] != "low" else "high"
+    with pytest.raises(ValueError, match="risk_label mismatch"):
+        verify_and_align_test_data(df_test, df_ann_bad_label)
+
+    # 5. Altered feature values must raise ValueError
+    df_ann_bad_feat = df_ann.copy()
+    df_ann_bad_feat.loc[0, "attendance_pct"] += 25.0
+    with pytest.raises(ValueError, match="Feature 'attendance_pct' values do not align"):
+        verify_and_align_test_data(df_test, df_ann_bad_feat)
+

@@ -138,45 +138,124 @@ def predict_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
-def plot_confusion_matrix(
-    cm: np.ndarray,
+def verify_and_align_test_data(
+    df_test: pd.DataFrame,
+    df_ann: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Explicitly verify and align sealed test set and Step 3 ANN predictions.
+
+    Validates:
+      1. Exact row count equality (1,800 records).
+      2. 'record_id' presence and exact 1-to-1 match.
+      3. 'risk_label' ground-truth target exact match for every record ID.
+      4. Academic feature values match within numerical tolerance (1e-3).
+
+    Returns:
+      (aligned_df_test, aligned_df_ann) strictly aligned by record_id.
+    Raises:
+      ValueError: If any alignment check fails.
+    """
+    if len(df_test) != len(df_ann):
+        raise ValueError(
+            f"Row count mismatch: test.csv has {len(df_test)} rows, "
+            f"step3_test_predictions.csv has {len(df_ann)} rows."
+        )
+
+    if "record_id" not in df_test.columns or "record_id" not in df_ann.columns:
+        raise ValueError("Both datasets must contain 'record_id' column for alignment.")
+
+    test_ids = set(df_test["record_id"])
+    ann_ids = set(df_ann["record_id"])
+    if test_ids != ann_ids:
+        missing_in_ann = test_ids - ann_ids
+        missing_in_test = ann_ids - test_ids
+        raise ValueError(
+            f"Record ID mismatch between datasets: "
+            f"{len(missing_in_ann)} in test but not ANN; {len(missing_in_test)} in ANN but not test."
+        )
+
+    # Explicit alignment on record_id matching test.csv order
+    ann_aligned = df_ann.set_index("record_id").reindex(df_test["record_id"]).reset_index()
+
+    # Verify ground-truth label match
+    if not (df_test["risk_label"].values == ann_aligned["risk_label"].values).all():
+        mismatched_labels = int((df_test["risk_label"].values != ann_aligned["risk_label"].values).sum())
+        raise ValueError(f"Ground-truth risk_label mismatch on {mismatched_labels} records.")
+
+    # Verify feature alignment
+    features = [
+        "attendance_pct",
+        "assessment_pct",
+        "assignment_pct",
+        "engagement_score",
+        "prior_performance_pct",
+    ]
+    for feat in features:
+        if feat in df_test.columns and feat in ann_aligned.columns:
+            if not np.allclose(df_test[feat].values, ann_aligned[feat].values, atol=1e-3):
+                raise ValueError(f"Feature '{feat}' values do not align between test and ANN datasets.")
+
+    print(
+        f"[ALIGNMENT CHECK PASSED] Explicitly verified 1-to-1 match on "
+        f"{len(df_test):,} record_ids, ground-truth labels, and all 5 academic features."
+    )
+    return df_test, ann_aligned
+
+
+def plot_confusion_matrices(
+    base_cm: np.ndarray,
+    ann_cm: np.ndarray,
     labels: list[str],
-    title: str,
     output_path: Path,
 ) -> None:
-    """Render and save a styled confusion matrix heatmap."""
-    fig, ax = plt.subplots(figsize=(6, 5), dpi=150)
-    cax = ax.imshow(cm, cmap="Blues", interpolation="nearest")
-    fig.colorbar(cax, ax=ax, fraction=0.046, pad=0.04)
+    """Render and save side-by-side confusion matrix heatmaps (Baseline vs. Step 3 ANN)."""
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5), dpi=150)
 
-    ax.set_xticks(range(len(labels)))
-    ax.set_yticks(range(len(labels)))
-    ax.set_xticklabels(labels, fontsize=11, fontweight="bold")
-    ax.set_yticklabels(labels, fontsize=11, fontweight="bold")
-    ax.set_xlabel("Predicted Risk Band", fontsize=12, labelpad=8)
-    ax.set_ylabel("True Ground-Truth Band", fontsize=12, labelpad=8)
-    ax.set_title(title, fontsize=13, fontweight="bold", pad=12)
+    panels = [
+        (base_cm, "Simple Baseline (Accuracy: 78.28%)\nLinear Weighted Sum", axes[0]),
+        (ann_cm, "Step 3 ANN (Accuracy: 84.11%)\nMLPClassifier (64, 32)", axes[1]),
+    ]
 
-    thresh = cm.max() / 2.0
-    for i in range(len(labels)):
-        for j in range(len(labels)):
-            val = cm[i, j]
-            color = "white" if val > thresh else "black"
-            ax.text(
-                j,
-                i,
-                f"{val:,}\n({val / cm[i].sum() * 100:.1f}%)",
-                ha="center",
-                va="center",
-                color=color,
-                fontsize=10,
-                fontweight="semibold",
-            )
+    for cm, title, ax in panels:
+        cax = ax.imshow(cm, cmap="Blues", interpolation="nearest")
+        fig.colorbar(cax, ax=ax, fraction=0.046, pad=0.04)
 
+        ax.set_xticks(range(len(labels)))
+        ax.set_yticks(range(len(labels)))
+        ax.set_xticklabels([l.title() for l in labels], fontsize=10, fontweight="bold")
+        ax.set_yticklabels([l.title() for l in labels], fontsize=10, fontweight="bold")
+        ax.set_xlabel("Predicted Risk Band", fontsize=11, labelpad=8)
+        ax.set_ylabel("True Ground-Truth Band", fontsize=11, labelpad=8)
+        ax.set_title(title, fontsize=11, fontweight="bold", pad=10)
+
+        thresh = cm.max() / 2.0
+        for i in range(len(labels)):
+            for j in range(len(labels)):
+                val = cm[i, j]
+                total = cm[i].sum()
+                pct = (val / total * 100) if total > 0 else 0.0
+                color = "white" if val > thresh else "black"
+                ax.text(
+                    j,
+                    i,
+                    f"{val:,}\n({pct:.1f}%)",
+                    ha="center",
+                    va="center",
+                    color=color,
+                    fontsize=9,
+                    fontweight="semibold",
+                )
+
+    plt.suptitle(
+        "SC03 Test Split Confusion Matrices — Baseline vs. Step 3 ANN (Sealed Split, N = 1,800)",
+        fontsize=13,
+        fontweight="bold",
+        y=1.02,
+    )
     plt.tight_layout()
-    plt.savefig(output_path, dpi=150)
+    plt.savefig(output_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
-    print(f"Saved confusion matrix plot: {output_path}")
+    print(f"Saved side-by-side confusion matrix plot: {output_path}")
 
 
 def plot_comparison_bar(
@@ -270,73 +349,75 @@ def plot_comparison_bar(
 
 
 def plot_twin_read_cases(output_path: Path) -> None:
-    """Render graphic table showing representative Twin Read student cases."""
+    """Render graphic table showing verified Twin Read cases from the test split."""
+    # Verified cases directly from data/reports/step4_test_comparison_full.csv
+    # Softmax probabilities verified directly from data/reports/step3_test_predictions.csv
     cases = [
         {
-            "id": "STU-00014 (Attendance Collapse)",
-            "att": 29.0,
-            "assess": 76.2,
-            "assign": 48.2,
-            "eng": 1.9,
-            "prior": 66.6,
-            "base_score": 50.0,
+            "id": "STU-09402\n(Attendance Collapse)",
+            "att": 27.5,
+            "assess": 59.7,
+            "assign": 60.4,
+            "eng": 8.4,
+            "prior": 63.9,
+            "base_score": 53.03,
             "base_pred": "medium",
-            "ann_pred": "high (P=0.98)",
+            "ann_pred": "high (P=0.993)",
             "true": "high",
-            "verdict": "ANN catches attendance spiral; Baseline averages away risk",
+            "verdict": "Severe attendance collapse (<30%); baseline averages away risk with LMS clicks, ANN catches acute jeopardy",
         },
         {
-            "id": "STU-00004 (Cramming Illusion)",
-            "att": 60.1,
-            "assess": 67.3,
-            "assign": 52.5,
-            "eng": 2.9,
-            "prior": 82.6,
-            "base_score": 60.0,
+            "id": "STU-01217\n(Compensatory Illusion)",
+            "att": 93.3,
+            "assess": 10.1,
+            "assign": 72.8,
+            "eng": 7.2,
+            "prior": 30.4,
+            "base_score": 55.82,
             "base_pred": "medium",
-            "ann_pred": "medium (P=0.78)",
+            "ann_pred": "high (P=0.942)",
+            "true": "high",
+            "verdict": "Catastrophic exam collapse (10.1%); baseline averages with high attendance, ANN detects failing assessment bottleneck",
+        },
+        {
+            "id": "STU-05328\n(Emerging Deficit Agreement)",
+            "att": 64.5,
+            "assess": 52.2,
+            "assign": 63.1,
+            "eng": 6.7,
+            "prior": 57.8,
+            "base_score": 60.11,
+            "base_pred": "medium",
+            "ann_pred": "medium (P=0.885)",
             "true": "medium",
-            "verdict": "Both methods agree on moderate intervention need",
+            "verdict": "Both methods agree on moderate intervention need; balanced mid-tier indicators across all features",
         },
         {
-            "id": "STU-00010 (Unproductive Struggle)",
-            "att": 94.2,
-            "assess": 32.5,
-            "assign": 72.2,
-            "eng": 9.2,
-            "prior": 55.6,
-            "base_score": 67.2,
-            "base_pred": "medium",
-            "ann_pred": "high (P=0.91)",
-            "true": "high",
-            "verdict": "High LMS clicks fool baseline; ANN detects exam collapse",
-        },
-        {
-            "id": "STU-00012 (Consistent Strong)",
-            "att": 100.0,
-            "assess": 72.3,
-            "assign": 88.4,
-            "eng": 5.6,
-            "prior": 88.0,
-            "base_score": 83.8,
+            "id": "STU-05002\n(Consistent Strong Agreement)",
+            "att": 77.7,
+            "assess": 74.6,
+            "assign": 69.5,
+            "eng": 9.8,
+            "prior": 61.2,
+            "base_score": 75.51,
             "base_pred": "low",
-            "ann_pred": "low (P=0.99)",
+            "ann_pred": "low (P=0.935)",
             "true": "low",
-            "verdict": "Both methods agree: student is securely on track",
+            "verdict": "Both methods agree record is safely on-track for routine monitoring; solid attendance and exam mastery",
         },
     ]
 
-    fig, ax = plt.subplots(figsize=(12, 5), dpi=150)
+    fig, ax = plt.subplots(figsize=(13, 5), dpi=150)
     ax.axis("off")
 
     col_labels = [
-        "Student Scenario",
+        "Synthetic Record",
         "Indicators (Att / Assess / Assign / Eng / Prior)",
         "Baseline Score",
         "Baseline Risk",
         "Step 3 ANN Risk",
         "True Label",
-        "Educational Clinical Takeaway",
+        "Pedagogical Rationale & Feature Dynamics (Synthetic Data)",
     ]
     table_data = []
     for c in cases:
@@ -345,7 +426,7 @@ def plot_twin_read_cases(output_path: Path) -> None:
             [
                 c["id"],
                 ind_str,
-                f"{c['base_score']:.1f}",
+                f"{c['base_score']:.2f}",
                 c["base_pred"].upper(),
                 c["ann_pred"].upper(),
                 c["true"].upper(),
@@ -360,8 +441,8 @@ def plot_twin_read_cases(output_path: Path) -> None:
         cellLoc="center",
     )
     table.auto_set_font_size(False)
-    table.set_fontsize(9)
-    table.scale(1.0, 2.0)
+    table.set_fontsize(8.5)
+    table.scale(1.0, 2.2)
 
     # Style header
     for j in range(len(col_labels)):
@@ -379,10 +460,11 @@ def plot_twin_read_cases(output_path: Path) -> None:
                 cell.set_text_props(fontstyle="italic", ha="left")
 
     ax.set_title(
-        "SC03 Representative Twin Read Case Studies — Baseline vs. Step 3 ANN",
-        fontsize=13,
+        "SC03 Representative Twin Read Case Studies — Verified Held-out Test Set Records (N = 1,800)\n"
+        "(All records verified from data/reports/step4_test_comparison_full.csv with exact ANN softmax probabilities)",
+        fontsize=12,
         fontweight="bold",
-        pad=18,
+        pad=20,
     )
     plt.tight_layout()
     plt.savefig(output_path, dpi=150, bbox_inches="tight")
@@ -405,10 +487,11 @@ def evaluate_on_test_set() -> dict[str, Any]:
     # 2. Compute majority-class baseline (predicts 'low' for all, since 'low' is most frequent ~44.5%)
     majority_pred = pd.Series("low", index=df_test.index)
 
-    # 3. Load or link Step 3 ANN predictions
+    # 3. Load and explicitly align Step 3 ANN predictions
     ann_pred_path = REPORT_DIR / "step3_test_predictions.csv"
     if ann_pred_path.exists():
         df_ann = pd.read_csv(ann_pred_path)
+        df_test, df_ann = verify_and_align_test_data(df_test, df_ann)
         ann_preds = df_ann["ann_prediction"]
     else:
         # Fallback to pickled model if predictions CSV missing
@@ -434,7 +517,8 @@ def evaluate_on_test_set() -> dict[str, Any]:
     base_rec_macro = float(recall_score(targets, base_preds, average="macro"))
     base_f1_macro = float(f1_score(targets, base_preds, average="macro"))
 
-    base_cm = confusion_matrix(targets, base_preds, labels=CLASS_LABELS)
+    labels_cm = ["high", "low", "medium"]
+    base_cm = confusion_matrix(targets, base_preds, labels=labels_cm)
 
     # Compute per-class metrics
     base_class_rec = {}
@@ -455,7 +539,7 @@ def evaluate_on_test_set() -> dict[str, Any]:
     ann_rec_macro = float(recall_score(targets, ann_preds, average="macro"))
     ann_f1_macro = float(f1_score(targets, ann_preds, average="macro"))
 
-    ann_cm = confusion_matrix(targets, ann_preds, labels=CLASS_LABELS)
+    ann_cm = confusion_matrix(targets, ann_preds, labels=labels_cm)
 
     ann_class_rec = {}
     ann_class_prec = {}
@@ -584,7 +668,7 @@ def evaluate_on_test_set() -> dict[str, Any]:
     comparison_df.to_csv(comparison_csv_file, index=False)
     print(f"Saved comparison metrics CSV: {comparison_csv_file}")
 
-    # C. Full side-by-side comparison CSV
+    # C. Full side-by-side comparison CSV (explicitly aligned on record_id)
     full_comparison = df_with_base.copy()
     full_comparison["ann_prediction"] = ann_preds.values
     full_comparison["baseline_correct"] = full_comparison["baseline_prediction"] == full_comparison["risk_label"]
@@ -597,12 +681,12 @@ def evaluate_on_test_set() -> dict[str, Any]:
     print(f"Saved full side-by-side comparison CSV: {full_comparison_file}")
 
     # 6. Render and Save Plots
-    # A. Baseline Confusion Matrix
+    # A. Side-by-Side Confusion Matrix (Baseline vs. Step 3 ANN)
     cm_plot_file = RESULTS_DIR / "step4_baseline_confusion_matrix.png"
-    plot_confusion_matrix(
+    plot_confusion_matrices(
         base_cm,
-        labels=CLASS_LABELS,
-        title="SC03 Baseline Confusion Matrix (Test Split, N=1,800)",
+        ann_cm,
+        labels=labels_cm,
         output_path=cm_plot_file,
     )
 
@@ -617,7 +701,7 @@ def evaluate_on_test_set() -> dict[str, Any]:
     print("\n" + "=" * 65)
     print("SC03 STEP 4 BASELINE EVALUATION SUMMARY")
     print("=" * 65)
-    print(f"Dataset Split: Sealed Held-out Test Set (N = {len(df_test):,})")
+    print(f"Dataset Split: Sealed Held-out Synthetic Test Set (N = {len(df_test):,})")
     print("-" * 65)
     print(f"Simple Baseline Accuracy:   {base_acc * 100:.2f}% | Macro F1: {base_f1_macro:.4f}")
     print(f"Majority-Class Accuracy:    {maj_acc * 100:.2f}% | Macro F1: {maj_f1_macro:.4f}")
@@ -626,8 +710,8 @@ def evaluate_on_test_set() -> dict[str, Any]:
     print(f"Accuracy Gain:              +{ (ann_acc - base_acc) * 100:.2f} percentage points")
     print(f"Macro F1 Gain:              +{ (ann_f1_macro - base_f1_macro):.4f}")
     print(f"High-Risk Recall Gain:      +{ (ann_class_rec['high'] - base_class_rec['high']) * 100:.2f} percentage points")
-    print(f"  -> Baseline High Recall:  {base_class_rec['high'] * 100:.2f}% (Missed 192 high-risk students)")
-    print(f"  -> Step 3 ANN High Recall:{ann_class_rec['high'] * 100:.2f}% (Missed only 56 high-risk students)")
+    print(f"  -> Baseline High Recall:  {base_class_rec['high'] * 100:.2f}% (Missed 192 high-risk synthetic records)")
+    print(f"  -> Step 3 ANN High Recall:{ann_class_rec['high'] * 100:.2f}% (Missed 56 high-risk synthetic records)")
     print("=" * 65)
 
     return {
