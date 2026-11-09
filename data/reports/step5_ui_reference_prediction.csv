@@ -1,0 +1,2 @@
+predicted_class,label,intervention,notice,attendance_pct,assessment_pct,assignment_pct,engagement_score,prior_performance_pct
+low,Predicted low risk class,Routine monitoring & check-in,Educational prediction only. This decision-support output does not replace human mentor evaluation or constitute official disciplinary action.,100.0,87.2,67.0,7.9,92.1

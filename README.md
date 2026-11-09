@@ -151,9 +151,30 @@ python -m pytest tests/test_baseline.py -v
   - Model Performance Bar Chart: [`results/step4_model_comparison_bar.png`](results/step4_model_comparison_bar.png)
   - Twin Read Cases: [`results/step4_twin_read_cases.png`](results/step4_twin_read_cases.png)
 
+### 6. Run Step 5 Interactive Product V1 Application
+Launch the interactive web application, run automated checks, and verify consistency:
+```powershell
+# Install Product V1 dependencies:
+python -m pip install -r requirements-product-v1.txt
+
+# Start interactive Streamlit interface:
+python -m streamlit run app.py
+
+# Run Step 5 automated unit test suite (5 tests):
+python -m unittest test_product_predict -v
+
+# Run inference consistency verification:
+python src/check_product_prediction.py
+```
+- Documentation: [`docs/STEP-5.md`](docs/STEP-5.md)
+- Application Entry Point: [`app.py`](app.py)
+- Inference Module: [`src/product_predict.py`](src/product_predict.py)
+- Unit Tests: [`test_product_predict.py`](test_product_predict.py)
+- Reference Output: [`data/reports/step5_ui_reference_prediction.csv`](data/reports/step5_ui_reference_prediction.csv)
+
 ---
 
-## 6. Milestone Plan
+## 7. Milestone Plan
 
 - **M1 (Mid-Semester):** Deliver working Product V1: anonymous input → validation → baseline score & ADALINE/ANN neural classifier → Twin Read visual comparison → supportive intervention recommendation.
 - **M2 (End-Semester):** Implement and compare Perceptron, ADALINE, and Backpropagation; study error patterns, class imbalance, noise robustness, and fairness; deploy Product V2 publicly with full viva evidence package.
