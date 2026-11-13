@@ -3,7 +3,7 @@
 ## Team and project
 - **Team name:** SC03 Capstone Project Team
 - **Project code and title:** SC03 — Student Performance and Academic Intervention System
-- **Branch and commit:** `step-5-product-v1` (`76a01ee`)
+- **Branch and commit:** `step-5-product-v1` (`bfbde40`)
 
 ---
 
@@ -81,6 +81,15 @@ The system runs inference using our saved Step 3 Artificial Neural Network (ANN)
 
 ---
 
+## Screenshots and evidence
+- **Input Form State:** [`docs/evidence/step5/ui_input_form.png`](evidence/step5/ui_input_form.png) — Clean initial state displaying educational disclaimer, field labels with units (% and index), "Load one existing example" button, and prediction trigger.
+- **Successful Prediction Result:** [`docs/evidence/step5/ui_successful_result.png`](evidence/step5/ui_successful_result.png) — Evaluated sample `STU-07286`, showing plain-language banner `Predicted low risk class`, suggested supportive intervention `Routine monitoring & check-in`, prediction probabilities, input/output data table, and CSV download.
+- **Input Validation Error Handling:** [`docs/evidence/step5/ui_validation_error.png`](evidence/step5/ui_validation_error.png) — Graceful rejection of blank fields, negative values, and out-of-bounds inputs without crashing or unhandled traceback.
+- **Automated Test Log:** [`docs/evidence/step5/test_results.txt`](evidence/step5/test_results.txt) — Verifiable terminal log of 5 passing unit tests (`unittest`), reference parity check script, and 18 passing regression tests (`pytest`).
+- **UI Reference CSV Artifact:** [`data/reports/step5_ui_reference_prediction.csv`](../data/reports/step5_ui_reference_prediction.csv) — Persisted reference prediction for identical input verification.
+
+---
+
 ## Earlier feedback addressed
 - **Step 1 Feedback (Data privacy & scoping):** Ensured all test scenarios and demo inputs are strictly anonymous without student PII (using synthetic anonymous identifiers such as `STU-07286`).
 - **Step 2 Feedback (Split integrity):** Built input validation module using verified feature bounds established in Step 2 data profiling. Demo sample loading directly references sealed Step 2 validation split without touching training data.
@@ -100,4 +109,20 @@ The system runs inference using our saved Step 3 Artificial Neural Network (ANN)
 - **Abhishek (`@okayyyabhishek`) — Repository & Backend Lead:** Implemented `src/product_predict.py` inference pipeline, model loading logic, and environment configuration (`requirements-product-v1.txt`).
 - **Saumya Rawat (`@saumyaarawatt`) — Data & ML Lead:** Formulated input validation rules, checked feature ranges against Step 2 data distributions, and verified model class consistency.
 - **Aman Sharma (`@amansharma-link`) — Baseline & ML Support:** Built `src/check_product_prediction.py` consistency verification and validated feature-by-feature parity between UI and script outputs.
-- **Riya Gupta (`@riyargupta09-star`) — Testing & UI Lead:** Developed Streamlit interactive frontend (`app.py`), authored unit test suite (`test_product_predict.py`), executed boundary test cases, and compiled `docs/STEP-5.md`.
+- **Riya Gupta (`@riyargupta09-star`) — Testing & UI Lead:** Developed Streamlit interactive frontend (`app.py`), authored unit test suite (`test_product_predict.py`), executed boundary test cases, generated evidence screenshots, and compiled `docs/STEP-5.md`.
+
+---
+
+## Step 5 Portal Submission Summary
+
+| Field | Value |
+|---|---|
+| **Repository URL** | `https://github.com/okayyyabhishek/SC03-Student-Performance-and-Academic-Intervention-System-Approximate.git` |
+| **Branch** | `step-5-product-v1` |
+| **Interface type** | Streamlit Interactive Web Application |
+| **Entry-point file** | `app.py` |
+| **Run command** | `python -m streamlit run app.py` |
+| **Report path** | `docs/STEP-5.md` |
+| **Demo URL** | *(Leave blank for local demo)* |
+| **Evidence confirmations** | All confirmed: Working inference, input validation without crash, readable output with units/labels/intervention, and complete documentation with screenshots. |
+| **Completion note** | Product V1 delivered on branch step-5-product-v1. Features interactive Streamlit app (app.py) with 5-feature validation, Step 3 neural model inference, risk tier & supportive intervention outputs, CSV export, automated unit tests (test_product_predict.py, 5/5 PASS), reference check script (src/check_product_prediction.py), evidence screenshots in docs/evidence/step5/, and comprehensive documentation in docs/STEP-5.md. All 18 prior step regression tests pass. |

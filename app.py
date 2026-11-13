@@ -42,10 +42,7 @@ if st.button("Load one existing example"):
         st.error(f"Example could not be loaded: {error}")
 
 with st.form("academic_indicators"):
-    values = {
-        name: st.text_input(LABELS[name], value=st.session_state.get(name, ""), key=name)
-        for name in FEATURES
-    }
+    values = {name: st.text_input(LABELS[name], key=name) for name in FEATURES}
     submitted = st.form_submit_button("Predict using saved ANN")
 
 if submitted:

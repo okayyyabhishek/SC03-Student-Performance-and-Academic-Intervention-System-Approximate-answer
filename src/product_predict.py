@@ -95,3 +95,4 @@ def predict_one(model, values):
         "notice": NOTICE_TEXT,
         **clean,
     }
+

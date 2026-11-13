@@ -33,7 +33,7 @@ Mentors often notice struggling students late in a semester, after marks have al
 Roles rotate across project steps to prevent knowledge silos and ensure all members can defend every component in viva examinations:
 
 | Member | Real Name | GitHub Username | Assigned Role | Step 1 Focus | Milestone Focus (M1 / M2) |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Member 1** | **Abhishek** | [`@okayyyabhishek`](https://github.com/okayyyabhishek) | Repository & Backend Lead | Repository architecture, environment setup, Git workflow, verification | FastAPI backend, RBAC middleware, Docker, deployment |
 | **Member 2** | **Saumya Rawat** | [`@saumyaarawatt`](https://github.com/saumyaarawatt) | Data & ML Lead | Data dictionary, 20-row simulated sample, source citations, bounds | 10k+ pipeline, NumPy ADALINE & Backprop training, metrics |
 | **Member 3** | **Aman Sharma** | [`@amansharma-link`](https://github.com/amansharma-link) | Baseline & ML Support | Weighted baseline rules, golden test checks, pseudocode documentation | Baseline engine, model comparison, noise & fairness audit |
@@ -86,10 +86,12 @@ SC03-Student-Performance-and-Academic-Intervention-System/
 ## 5. Quickstart & Verification
 
 ### Prerequisites
+
 - Python 3.11+
 - Node.js 18+ (for Step 5 onwards)
 
 ### 1. Set Up Python Virtual Environment
+
 ```powershell
 python -m venv .venv
 # Windows PowerShell:
@@ -101,7 +103,9 @@ pip install -r requirements.txt
 ```
 
 ### 2. Run Step 1 Data Validator
+
 Verify that the 20-row valid sample passes and the invalid test fixture is rejected with clear errors:
+
 ```powershell
 # Valid starter sample (prints PASS):
 python src/validate_data.py data/sample_input.csv
@@ -111,25 +115,33 @@ python src/validate_data.py data/invalid_cases.csv
 ```
 
 ### 3. Run Step 2 Data Pipeline & Quality Profiling
+
 Generate clean stratified 70/15/15 splits, data quality report, and verification manifest:
+
 ```powershell
 python src/pipeline/build_dataset.py
 python src/pipeline/profile_dataset.py
 ```
+
 - Documentation: [`docs/STEP-2.md`](docs/STEP-2.md)
 - Data Quality Report: [`data/reports/data_quality_report.md`](data/reports/data_quality_report.md)
 
 ### 4. Run Step 3 Artificial Neural Network (ANN)
+
 Train the multi-layer feed-forward neural network with backpropagation and evaluate on test data:
+
 ```powershell
 python src/train_ann.py
 ```
+
 - Documentation: [`docs/STEP-3.md`](docs/STEP-3.md)
 - Executed Notebook: [`notebooks/02_ann_model.ipynb`](notebooks/02_ann_model.ipynb)
 - Model Artifact: [`models/ann_student_performance.pkl`](models/ann_student_performance.pkl)
 
 ### 5. Run Step 4 Simple Baseline & Empirical Model Comparison
+
 Evaluate the deterministic weighted baseline on the sealed test set ($N=1,800$) and generate comparative metrics:
+
 ```powershell
 # Full test set evaluation and comparison plot generation:
 python src/baseline.py --evaluate
@@ -142,6 +154,7 @@ python src/baseline.py --attendance 45.0 --assessment 38.0 --assignment 50.0 --e
 # Automated Step 4 unit tests:
 python -m pytest tests/test_baseline.py -v
 ```
+
 - Documentation: [`docs/STEP-4.md`](docs/STEP-4.md)
 - Executed Notebook: [`notebooks/03_baseline.ipynb`](notebooks/03_baseline.ipynb)
 - Comparison Metrics: [`data/reports/step4_comparison_metrics.csv`](data/reports/step4_comparison_metrics.csv)
@@ -152,7 +165,9 @@ python -m pytest tests/test_baseline.py -v
   - Twin Read Cases: [`results/step4_twin_read_cases.png`](results/step4_twin_read_cases.png)
 
 ### 6. Run Step 5 Interactive Product V1 Application
+
 Launch the interactive web application, run automated checks, and verify consistency:
+
 ```powershell
 # Install Product V1 dependencies:
 python -m pip install -r requirements-product-v1.txt
@@ -166,6 +181,7 @@ python -m unittest test_product_predict -v
 # Run inference consistency verification:
 python src/check_product_prediction.py
 ```
+
 - Documentation: [`docs/STEP-5.md`](docs/STEP-5.md)
 - Application Entry Point: [`app.py`](app.py)
 - Inference Module: [`src/product_predict.py`](src/product_predict.py)
