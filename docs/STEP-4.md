@@ -179,3 +179,45 @@ Open and run all cells in [`../notebooks/03_baseline.ipynb`](../notebooks/03_bas
 | **Aman Sharma** | QA & Evaluation Engineer | Built `tests/test_baseline.py` test suite covering formulas, cutoffs, golden cases, and alignment validation; developed matplotlib comparative plotting routines; generated `results/step4_*.png` visual artifacts. |
 | **Riya Gupta** | Documentation & Ethics Lead | Authored `docs/STEP-4.md`; conducted Twin Read case study error analysis; documented compensatory illusion failure modes; articulated human-in-the-loop ethical guidelines and operational limitations on synthetic data. |
 
+---
+
+## 10. Teacher Review & Faculty Viva Defense Summary
+
+### A. Core Empirical Findings on Simulated Data ($N=1,800$ Sealed Partition)
+During the faculty milestone defense, our team demonstrated the quantitative and pedagogical justification for adopting the Step 3 Artificial Neural Network over the simple weighted baseline on the 1,800 held-out synthetic test records:
+
+1. **Overall Accuracy Gain:**  
+   - Simple Baseline: **78.28%** (1,409/1,800 correct)
+   - Step 3 ANN: **84.11%** (1,514/1,800 correct)
+   - *Impact:* Net **+5.83 percentage points** (+105 additional synthetic student profiles correctly classified).
+2. **Macro F1 Balance Across Tiers:**  
+   - Simple Baseline: **0.7704**
+   - Step 3 ANN: **0.8290** (+0.0587 improvement, +5.87 pp)
+   - *Impact:* Confirms the ANN is not merely gaming the majority class (`low` risk, 44.5%), but demonstrates balanced harmonic detection across all three risk categories.
+3. **Critical Triage Surge — High-Risk Recall:**  
+   - Simple Baseline: **63.71%** (caught 337 / 529 high-risk cases; **missed 192 cases**)
+   - Step 3 ANN: **89.41%** (caught 473 / 529 high-risk cases; **missed only 56 cases**)
+   - *Impact:* An extraordinary **+25.71 percentage point surge** detecting **136 additional struggling student profiles** that the baseline completely failed to alert.
+
+### B. Mathematical Defense: Overcoming the "Compensatory Illusion"
+When asked by faculty why the ANN decisively outperforms the baseline in catching high-risk students, the mathematical explanation centers on the **compensatory illusion** inherent to linear weighting formulas:
+$$\text{Score} = 0.30 \cdot \text{attendance} + 0.30 \cdot \text{assessment} + 0.20 \cdot \text{assignment} + 0.10 \cdot (\text{engagement} \times 10) + 0.10 \cdot \text{prior}$$
+
+- **The Linear Blindspot:** In a linear weighted sum, strong performance in one feature (e.g., 90%+ attendance or 8/10 portal clicks) mathematically cancels out severe deficits in another (e.g., 10% in continuous assessments).
+- **Verified Record `STU-01217`:**
+  - Attendance = 93.3%, Assessment = **10.1%**, Assignment = 72.8%, Engagement = 7.2/10, Prior = 30.4%.
+  - Baseline Score = $\mathbf{55.82} \ge 50.0 \rightarrow$ Incorrectly classified as **`medium` risk** (recommending only passive study tips), ignoring the student's catastrophic 10.1% internal assessment failure.
+  - **ANN Non-Linear Rectification:** With ReLU non-linear activation layers, the neural network learns non-linear interaction thresholds: if exam performance collapses below 40%, high attendance cannot compensate. The ANN predicts **`high` risk** with $94.21\%$ probability ($P=0.9421$), correctly dispatching urgent **Faculty Follow-up**.
+
+### C. Faculty Review Audit & Trade-off Analysis
+1. **Advisor Review Volume vs. Safety:**  
+   The ANN classified 51 medium-risk students as high-risk (false alarms, vs. 8 for baseline). In academic decision-support, false alarms are far preferable to false negatives (unflagged student failure), because faculty advisors retain the final authority to review student context before dispatching interventions.
+2. **Medium-Risk Over-Prediction in Baseline:**  
+   While baseline medium recall appears higher (81.28% vs 71.28%), this was an artifact of the baseline using medium as a "catch-all dumping ground" (low precision: 55.93%). The ANN achieves higher precision (69.21%) and superior F1 ($0.7023$ vs $0.6626$).
+3. **Synthetic Provenance & Ethical Boundaries:**  
+   The dataset contains 12,000 synthetic records calibrated on OULAD. While mathematical superiority is rigorously established, real-world educational retention claims require prospective, human-supervised observational trials.
+
+### D. Readiness & Hand-off to Step 5 (Product V1)
+With the empirical superiority of the Step 3 ANN firmly established, the saved model pipeline (`models/ann_student_performance.pkl` containing fitted `StandardScaler` + `MLPClassifier`) is packaged directly into the **Product V1** interactive web application (`app.py`), enabling faculty advisors to enter student indicators, receive immediate risk tiers and supportive interventions, and export results for institutional documentation.
+
+
