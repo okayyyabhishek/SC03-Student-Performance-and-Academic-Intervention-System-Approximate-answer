@@ -111,18 +111,5 @@ The system runs inference using our saved Step 3 Artificial Neural Network (ANN)
 - **Aman Sharma (`@amansharma-link`) — Baseline & ML Support:** Built `src/check_product_prediction.py` consistency verification and validated feature-by-feature parity between UI and script outputs.
 - **Riya Gupta (`@riyargupta09-star`) — Testing & UI Lead:** Developed Streamlit interactive frontend (`app.py`), authored unit test suite (`test_product_predict.py`), executed boundary test cases, generated evidence screenshots, and compiled `docs/STEP-5.md`.
 
----
-
-## Step 5 Portal Submission Summary
-
-| Field | Value |
-|---|---|
-| **Repository URL** | `https://github.com/okayyyabhishek/SC03-Student-Performance-and-Academic-Intervention-System-Approximate-answer.git` |
-| **Branch** | `step-5-product-v1` |
-| **Interface type** | Streamlit Interactive Web Application |
-| **Entry-point file** | `app.py` |
-| **Run command** | `python -m streamlit run app.py` |
-| **Report path** | `docs/STEP-5.md` |
-| **Demo URL** | *(Leave blank for local demo)* |
-| **Evidence confirmations** | All confirmed: Working inference, input validation without crash, readable output with units/labels/intervention, and complete documentation with screenshots. |
+ts/labels/intervention, and complete documentation with screenshots. |
 | **Completion note** | Product V1 delivered on branch step-5-product-v1. Features interactive Streamlit app (app.py) with 5-feature validation, Step 3 neural model inference, risk tier & supportive intervention outputs, CSV export, automated unit tests (test_product_predict.py, 5/5 PASS), reference check script (src/check_product_prediction.py), evidence screenshots in docs/evidence/step5/, and comprehensive documentation in docs/STEP-5.md. All 18 prior step regression tests pass. |
