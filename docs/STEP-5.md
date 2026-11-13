@@ -117,7 +117,7 @@ The system runs inference using our saved Step 3 Artificial Neural Network (ANN)
 
 | Field | Value |
 |---|---|
-| **Repository URL** | `https://github.com/okayyyabhishek/SC03-Student-Performance-and-Academic-Intervention-System-Approximate.git` |
+| **Repository URL** | `https://github.com/okayyyabhishek/SC03-Student-Performance-and-Academic-Intervention-System-Approximate-answer.git` |
 | **Branch** | `step-5-product-v1` |
 | **Interface type** | Streamlit Interactive Web Application |
 | **Entry-point file** | `app.py` |
