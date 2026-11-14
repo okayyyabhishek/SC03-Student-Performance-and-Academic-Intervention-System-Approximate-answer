@@ -66,14 +66,3 @@ Keep the other fields fixed when testing a single input. For each run, replace t
 - **Aman Sharma (`@amansharma-link`) — Baseline & ML Support:** Performed reference CSV generation, parity check comparison, and model file availability tests (T07-T08).
 - **Riya Gupta (`@riyargupta09-star`) — Testing & UI Lead:** Executed browser tests (T01-T06), authored `docs/STEP-6.md`, ran automated unit tests (T10), and compiled evidence table.
 
----
-
-## Step 6 Portal Submission Summary
-
-- **Repository URL:** `https://github.com/okayyyabhishek/SC03-Student-Performance-and-Academic-Intervention-System-Approximate-answer.git`
-- **Branch:** `step-6-testing`
-- **Report path:** `docs/STEP-6.md`
-- **Test command:** `python -m unittest -v test_product_predict; python src/compare_step6_predictions.py`
-- **Brief completion note:**
-  `Branch step-6-testing. Report docs/STEP-6.md. Automated checks: python -m unittest -v test_product_predict (5/5 PASS), python src/compare_step6_predictions.py (PASS). Tested 10 cases (T01-T10) covering normal prediction, lower/upper boundaries, out-of-range, non-numeric, blank fields, and missing model resilience. Reference CSV parity verified. See report for evidence and limits.`
-
