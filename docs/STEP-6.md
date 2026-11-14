@@ -76,3 +76,4 @@ Keep the other fields fixed when testing a single input. For each run, replace t
 - **Test command:** `python -m unittest -v test_product_predict; python src/compare_step6_predictions.py`
 - **Brief completion note:**
   `Branch step-6-testing. Report docs/STEP-6.md. Automated checks: python -m unittest -v test_product_predict (5/5 PASS), python src/compare_step6_predictions.py (PASS). Tested 10 cases (T01-T10) covering normal prediction, lower/upper boundaries, out-of-range, non-numeric, blank fields, and missing model resilience. Reference CSV parity verified. See report for evidence and limits.`
+
