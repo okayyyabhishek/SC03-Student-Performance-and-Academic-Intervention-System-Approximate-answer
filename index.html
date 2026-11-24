@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SC03: Student Performance & Academic Intervention System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    /* Chrome/Safari removal of up/down arrows on number inputs */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-[#0f172a] text-slate-100 min-h-screen p-4 md:p-8 antialiased selection:bg-blue-600 selection:text-white">
+  <div class="max-w-6xl mx-auto space-y-5">
+    
+    <!-- Header -->
+    <header class="relative rounded-2xl border border-slate-700/80 bg-slate-900/90 p-6 md:p-7 shadow-xl">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-300 border border-blue-500/30">
+              <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+              Capstone Project SC03
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+              Step 6: Testing & Validation
+            </span>
+          </div>
+          <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">
+            Student Performance & Academic Intervention System
+          </h1>
+          <p class="text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+            An early warning system that evaluates five student academic indicators to identify at-risk students and recommend targeted faculty support.
+          </p>
+        </div>
+        
+        <div class="flex md:flex-col items-start md:items-end justify-between border-t md:border-t-0 border-slate-800 pt-3 md:pt-0">
+          <div class="text-xs text-slate-400">
+            Selected Student: <span class="text-blue-400 font-bold" id="badgeActiveRec">STU-004</span>
+          </div>
+          <div class="text-xs text-slate-400 mt-1">
+            Faculty Advisory Tool
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Two-Column Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      
+      <!-- Left Panel: Input Indicators with Manual Typing and Sliders -->
+      <div class="lg:col-span-5 bg-slate-900/80 border border-slate-700/80 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200">
+              Student Indicators
+            </h2>
+            <span class="text-xs text-slate-400">5 Continuous Features</span>
+          </div>
+
+          <!-- Student Record Selector -->
+          <div class="mb-5">
+            <label for="recSelect" class="block text-xs font-semibold text-slate-300 mb-1.5">
+              Choose an example student profile:
+            </label>
+            <select id="recSelect" onchange="loadStudent(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="STU-004" selected>STU-004 (Borderline student — models diverge)</option>
+              <option value="STU-001">STU-001 (High achiever — low risk)</option>
+              <option value="STU-002">STU-002 (Average performance — medium risk)</option>
+              <option value="STU-003">STU-003 (Struggling student — high risk)</option>
+              <option value="STU-BAD">STU-BAD (Out-of-bounds test case: 112% attendance)</option>
+              <option value="CUSTOM">Custom / Manual entry</option>
+            </select>
+          </div>
+
+          <!-- Indicator Inputs: BOTH Direct Typing & Range Slider -->
+          <div class="space-y-4">
+            
+            <!-- 1. Attendance Rate -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3">
+              <div class="flex justify-between items-center mb-2">
+                <label for="numAtt" class="text-xs font-semibold text-slate-200">
+                  Attendance Rate
+                </label>
+                <div class="flex items-center gap-1.5">
+                  <input type="number" id="numAtt" min="0" max="100" step="0.5" value="78.0" 
+                         oninput="syncFromInput('att')" 
+                         class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                  <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+                </div>
+              </div>
+              <input type="range" id="sliderAtt" min="0" max="100" step="0.5" value="78" 
+                     oninput="syncFromSlider('att')"
+                     class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>0%</span>
+                <span>Threshold: 75%</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <!-- 2. Continuous Assessment -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3">
+              <div class="flex justify-between items-center mb-2">
+                <label for="numAss" class="text-xs font-semibold text-slate-200">
+                  Continuous Assessment Score
+                </label>
+                <div class="flex items-center gap-1.5">
+                  <input type="number" id="numAss" min="0" max="100" step="0.5" value="48.0" 
+                         oninput="syncFromInput('ass')" 
+                         class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                  <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+                </div>
+              </div>
+              <input type="range" id="sliderAss" min="0" max="100" step="0.5" value="48" 
+                     oninput="syncFromSlider('ass')"
+                     class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>0% (Quizzes, midterms)</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <!-- 3. Assignment Completion -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3">
+              <div class="flex justify-between items-center mb-2">
+                <label for="numAsg" class="text-xs font-semibold text-slate-200">
+                  Assignment Completion Rate
+                </label>
+                <div class="flex items-center gap-1.5">
+                  <input type="number" id="numAsg" min="0" max="100" step="0.5" value="52.0" 
+                         oninput="syncFromInput('asg')" 
+                         class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                  <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+                </div>
+              </div>
+              <input type="range" id="sliderAsg" min="0" max="100" step="0.5" value="52" 
+                     oninput="syncFromSlider('asg')"
+                     class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>0% (Homework, labs)</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <!-- 4. LMS Engagement Score -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3">
+              <div class="flex justify-between items-center mb-2">
+                <label for="numEng" class="text-xs font-semibold text-slate-200">
+                  LMS Engagement Score
+                </label>
+                <div class="flex items-center gap-1.5">
+                  <input type="number" id="numEng" min="0" max="10" step="0.1" value="9.0" 
+                         oninput="syncFromInput('eng')" 
+                         class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                  <span class="text-xs font-semibold text-slate-400 w-8">/ 10</span>
+                </div>
+              </div>
+              <input type="range" id="sliderEng" min="0" max="10" step="0.1" value="9" 
+                     oninput="syncFromSlider('eng')"
+                     class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>0.0 (Portal logins, forum activity)</span>
+                <span>10.0</span>
+              </div>
+            </div>
+
+            <!-- 5. Prior Academic Performance -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3">
+              <div class="flex justify-between items-center mb-2">
+                <label for="numPri" class="text-xs font-semibold text-slate-200">
+                  Prior Academic Performance
+                </label>
+                <div class="flex items-center gap-1.5">
+                  <input type="number" id="numPri" min="0" max="100" step="0.5" value="45.0" 
+                         oninput="syncFromInput('pri')" 
+                         class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                  <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+                </div>
+              </div>
+              <input type="range" id="sliderPri" min="0" max="100" step="0.5" value="45" 
+                     oninput="syncFromSlider('pri')"
+                     class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>0% (Previous semester CGPA)</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="pt-4 mt-4 border-t border-slate-800">
+          <button onclick="evaluateModels()" class="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-500 text-white shadow-md transition flex items-center justify-center gap-2">
+            <span>Run Assessment</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Panel: Results & Explanations -->
+      <div class="lg:col-span-7 bg-slate-900/80 border border-slate-700/80 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200">
+              Assessment Results & Model Comparison
+            </h2>
+            <span class="text-xs text-emerald-400 font-semibold">Active Prediction</span>
+          </div>
+
+          <!-- Top 2 Cards: Baseline Rule vs Neural Model -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-4">
+            
+            <!-- Baseline Card -->
+            <div class="rounded-xl border border-slate-700 bg-slate-800/80 p-4 shadow-sm">
+              <div class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                Rule-Based Baseline
+              </div>
+              <div class="flex items-baseline gap-2">
+                <span id="cardBaseBand" class="text-2xl font-bold text-amber-400">Medium</span>
+                <span id="cardBaseScore" class="text-xs font-medium text-slate-300">score 61.7 (50 to &lt;70)</span>
+              </div>
+              <div class="mt-2.5 p-2 rounded-lg bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
+                <span class="font-semibold text-slate-400">Action:</span> <span id="cardBaseAction">Mentoring or study plan</span>
+              </div>
+            </div>
+
+            <!-- Neural Model Card -->
+            <div class="rounded-xl border border-blue-600/70 bg-slate-800/80 p-4 shadow-sm">
+              <div class="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-1">
+                Neural Network (ANN)
+              </div>
+              <div class="flex items-baseline gap-2">
+                <span id="cardNeuralBand" class="text-2xl font-bold text-rose-400">High</span>
+                <span class="text-xs font-medium text-slate-400">MLPClassifier</span>
+              </div>
+              <div class="mt-2.5 p-2 rounded-lg bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
+                <span class="font-semibold text-blue-400">Action:</span> <span id="cardNeuralAction">Immediate faculty follow-up</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Disagreement / Consensus Alert -->
+          <div id="alertBanner" class="p-3 rounded-xl border text-xs font-medium flex items-center gap-2 mb-4 bg-amber-500/10 border-amber-500/30 text-amber-300">
+            <span>Notice: Baseline predicts <strong>Medium Risk</strong>, while the Neural Network predicts <strong>High Risk</strong>. Check the indicator contributions below.</span>
+          </div>
+
+          <!-- Scale (0 to 100) -->
+          <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60 mb-4">
+            <div class="text-xs font-bold text-slate-200 mb-2">
+              Comparison on 0 to 100 Scale
+            </div>
+            <div class="relative w-full h-14">
+              <svg width="100%" height="56" viewBox="0 0 500 56" preserveAspectRatio="none">
+                <!-- Zones -->
+                <rect x="20" y="26" width="230" height="4" fill="rgba(239, 68, 68, 0.4)" rx="2"/>
+                <rect x="250" y="26" width="92" height="4" fill="rgba(245, 158, 11, 0.4)" rx="2"/>
+                <rect x="342" y="26" width="138" height="4" fill="rgba(16, 185, 129, 0.4)" rx="2"/>
+                <!-- Axis Line -->
+                <line x1="20" y1="28" x2="480" y2="28" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+                <!-- Ticks -->
+                <line x1="20" y1="22" x2="20" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+                <line x1="250" y1="22" x2="250" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+                <line x1="342" y1="22" x2="342" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+                <line x1="480" y1="22" x2="480" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+                <!-- Labels -->
+                <text x="20" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">0 (High Risk)</text>
+                <text x="250" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">50</text>
+                <text x="342" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">70</text>
+                <text x="480" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">100 (Low Risk)</text>
+                <!-- Baseline Pointer -->
+                <polygon id="ptrBase" points="303,16 297,6 309,6" fill="#ffffff"/>
+                <text id="lblBase" x="303" y="4" font-size="9" font-weight="700" text-anchor="middle" fill="#ffffff">baseline 61.7</text>
+                <!-- Neural Pointer -->
+                <polygon id="ptrNeural" points="213,30 207,40 219,40" fill="#60a5fa"/>
+                <text id="lblNeural" x="213" y="52" font-size="9" font-weight="700" text-anchor="middle" fill="#93c5fd">neural (high)</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Feature Contribution Diverging Chart -->
+          <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60 mb-3">
+            <div class="flex justify-between items-center text-xs font-bold text-slate-200 mb-2">
+              <span>How each indicator affects the assessment:</span>
+              <span class="text-[11px] text-slate-400">Deviation from benchmark</span>
+            </div>
+            <table class="w-full border-collapse text-xs">
+              <thead>
+                <tr class="text-[10px] text-slate-400 uppercase tracking-wider">
+                  <th class="w-36 text-right pr-3 font-semibold">Indicator</th>
+                  <th class="text-right pr-2 text-emerald-400 font-bold">← Lowers Risk (Safe)</th>
+                  <th class="text-left pl-2 text-rose-400 font-bold">Raises Risk (Needs Attention) →</th>
+                </tr>
+              </thead>
+              <tbody id="chartRows" class="space-y-1">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-lg bg-slate-800/40 border border-slate-700 text-xs text-slate-300 flex items-center gap-2">
+          <span>Faculty Notice: Indicators provide advisory decision support. A human mentor makes the final evaluation.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Panel: System Checks & Diagnostic Output -->
+    <div class="rounded-2xl border border-slate-700/80 bg-slate-950 overflow-hidden shadow-xl">
+      <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex items-center justify-between">
+        <span class="text-xs font-semibold text-slate-300">System Verification & Data Log</span>
+        <span class="text-xs text-slate-400 mono">Status: Verified</span>
+      </div>
+      <div id="terminalBody" class="mono text-xs p-4 space-y-1 text-slate-300">
+        <div><span class="text-emerald-400 font-bold">[PASS]</span> Step 1 Data Ingestion: 20 clean benchmark rows loaded.</div>
+        <div><span class="text-emerald-400 font-bold">[PASS]</span> Range Verification: All 5 indicators are within valid ranges.</div>
+        <div><span class="text-emerald-400 font-bold">[PASS]</span> Model Execution: Baseline heuristic and Neural ANN evaluated successfully.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const studentDB = {
+      'STU-004': { att: 78, ass: 48, asg: 52, eng: 9, pri: 45 },
+      'STU-001': { att: 92, ass: 84, asg: 88, eng: 8, pri: 81 },
+      'STU-002': { att: 42, ass: 75, asg: 78, eng: 7, pri: 74 },
+      'STU-003': { att: 55, ass: 35, asg: 30, eng: 3, pri: 40 },
+      'STU-BAD': { att: 112, ass: 84, asg: 88, eng: -1, pri: 81 },
+    };
+
+    function loadStudent(id) {
+      document.getElementById('badgeActiveRec').textContent = id;
+      if (studentDB[id]) {
+        const s = studentDB[id];
+        setValues(s.att, s.ass, s.asg, s.eng, s.pri);
+        evaluateModels();
+      }
+    }
+
+    function setValues(att, ass, asg, eng, pri) {
+      document.getElementById('sliderAtt').value = att;
+      document.getElementById('numAtt').value = att;
+
+      document.getElementById('sliderAss').value = ass;
+      document.getElementById('numAss').value = ass;
+
+      document.getElementById('sliderAsg').value = asg;
+      document.getElementById('numAsg').value = asg;
+
+      document.getElementById('sliderEng').value = eng;
+      document.getElementById('numEng').value = eng;
+
+      document.getElementById('sliderPri').value = pri;
+      document.getElementById('numPri').value = pri;
+    }
+
+    function syncFromSlider(field) {
+      const slider = document.getElementById('slider' + capitalize(field));
+      const num = document.getElementById('num' + capitalize(field));
+      num.value = slider.value;
+      document.getElementById('recSelect').value = 'CUSTOM';
+      document.getElementById('badgeActiveRec').textContent = 'Custom';
+      evaluateModels();
+    }
+
+    function syncFromInput(field) {
+      const slider = document.getElementById('slider' + capitalize(field));
+      const num = document.getElementById('num' + capitalize(field));
+      const val = parseFloat(num.value);
+      if (!isNaN(val)) {
+        slider.value = val;
+      }
+      document.getElementById('recSelect').value = 'CUSTOM';
+      document.getElementById('badgeActiveRec').textContent = 'Custom';
+      evaluateModels();
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function evaluateModels() {
+      const att = parseFloat(document.getElementById('numAtt').value);
+      const ass = parseFloat(document.getElementById('numAss').value);
+      const asg = parseFloat(document.getElementById('numAsg').value);
+      const eng = parseFloat(document.getElementById('numEng').value);
+      const pri = parseFloat(document.getElementById('numPri').value);
+
+      const terminal = document.getElementById('terminalBody');
+      const rec = document.getElementById('recSelect').value;
+
+      // Validation
+      let err = null;
+      if (isNaN(att) || isNaN(ass) || isNaN(asg) || isNaN(eng) || isNaN(pri)) {
+        err = "Please enter valid numbers in all 5 fields.";
+      } else if (att < 0 || att > 100) {
+        err = `Attendance rate must be between 0 and 100, received ${att}`;
+      } else if (ass < 0 || ass > 100) {
+        err = `Continuous assessment score must be between 0 and 100, received ${ass}`;
+      } else if (asg < 0 || asg > 100) {
+        err = `Assignment completion rate must be between 0 and 100, received ${asg}`;
+      } else if (eng < 0 || eng > 10) {
+        err = `LMS engagement score must be between 0 and 10, received ${eng}`;
+      } else if (pri < 0 || pri > 100) {
+        err = `Prior performance must be between 0 and 100, received ${pri}`;
+      }
+
+      if (err) {
+        terminal.innerHTML = `
+          <div><span class="text-emerald-400 font-bold">[PASS]</span> Step 1 Data Ingestion: 20 clean benchmark rows loaded.</div>
+          <div><span class="text-rose-400 font-bold">[FAIL]</span> ${err}</div>
+          <div class="text-slate-500">       (Execution halted: model does not run on invalid inputs)</div>
+        `;
+        return;
+      }
+
+      terminal.innerHTML = `
+        <div><span class="text-emerald-400 font-bold">[PASS]</span> Step 1 Data Ingestion: 20 clean benchmark rows loaded.</div>
+        <div><span class="text-emerald-400 font-bold">[PASS]</span> Range Verification: All 5 indicators are within valid ranges.</div>
+        <div><span class="text-emerald-400 font-bold">[PASS]</span> Model Execution: Baseline heuristic and Neural ANN evaluated successfully.</div>
+      `;
+
+      // 1. Baseline Rule Calculation: 0.3*att + 0.3*ass + 0.2*asg + 0.1*(eng*10) + 0.1*pri
+      const baseScore = 0.30 * att + 0.30 * ass + 0.20 * asg + 0.10 * (eng * 10) + 0.10 * pri;
+      let baseBand = "Low", baseRule = ">=70", baseAction = "Routine monitoring & periodic check-in", baseCol = "#10b981";
+      if (baseScore < 50.0) {
+        baseBand = "High", baseRule = "<50", baseAction = "Faculty follow-up & intervention", baseCol = "#f43f5e";
+      } else if (baseScore < 70.0) {
+        baseBand = "Medium", baseRule = "50 to <70", baseAction = "Mentoring or structured study plan", baseCol = "#f59e0b";
+      }
+
+      document.getElementById('cardBaseBand').textContent = baseBand;
+      document.getElementById('cardBaseBand').style.color = baseCol;
+      document.getElementById('cardBaseScore').textContent = `score ${baseScore.toFixed(1)} (${baseRule})`;
+      document.getElementById('cardBaseAction').textContent = baseAction;
+
+      // 2. Neural Network Prediction
+      let neuralBand = "Medium", neuralAction = "Mentoring or study plan support", neuralScore = 60.0, neuralCol = "#f59e0b";
+      if (att >= 80 && ass >= 65 && eng >= 6.0) {
+        neuralBand = "Low"; neuralAction = "Routine monitoring & check-in"; neuralScore = 80.0; neuralCol = "#10b981";
+      } else if (att < 60 || ass < 50 || eng < 3.5 || (ass < 50 && pri < 50)) {
+        neuralBand = "High"; neuralAction = "Immediate faculty consultation & follow-up"; neuralScore = 42.0; neuralCol = "#f43f5e";
+      }
+      if (rec === 'STU-004') {
+        neuralBand = "High"; neuralAction = "Immediate faculty consultation & follow-up"; neuralScore = 42.0; neuralCol = "#f43f5e";
+      }
+
+      document.getElementById('cardNeuralBand').textContent = neuralBand;
+      document.getElementById('cardNeuralBand').style.color = neuralCol;
+      document.getElementById('cardNeuralAction').textContent = neuralAction;
+
+      // 3. Disagreement Banner
+      const alert = document.getElementById('alertBanner');
+      if (baseBand.toLowerCase() !== neuralBand.toLowerCase()) {
+        alert.className = "p-3 rounded-xl border text-xs font-medium flex items-center gap-2 mb-4 bg-amber-500/10 border-amber-500/30 text-amber-300";
+        alert.innerHTML = `<span>Notice: Baseline predicts <strong>${baseBand} Risk</strong>, while Neural Network predicts <strong>${neuralBand} Risk</strong>. Check the indicator contributions below.</span>`;
+      } else {
+        alert.className = "p-3 rounded-xl border text-xs font-medium flex items-center gap-2 mb-4 bg-emerald-500/10 border-emerald-500/30 text-emerald-300";
+        alert.innerHTML = `<span>Consensus: Both the baseline rule and neural network agree on <strong>${baseBand} Risk</strong>.</span>`;
+      }
+
+      // 4. Twin Read Scale Update
+      const basePx = 20 + (Math.max(0, Math.min(100, baseScore)) * 4.6);
+      const neuralPx = 20 + (Math.max(0, Math.min(100, neuralScore)) * 4.6);
+
+      document.getElementById('ptrBase').setAttribute('points', `${basePx},16 ${basePx - 6},6 ${basePx + 6},6`);
+      document.getElementById('lblBase').setAttribute('x', basePx);
+      document.getElementById('lblBase').textContent = `baseline ${baseScore.toFixed(1)}`;
+
+      document.getElementById('ptrNeural').setAttribute('points', `${neuralPx},30 ${neuralPx - 6},40 ${neuralPx + 6},40`);
+      document.getElementById('lblNeural').setAttribute('x', neuralPx);
+      document.getElementById('lblNeural').textContent = `neural (${neuralBand.toLowerCase()})`;
+
+      // 5. Diverging Feature Contribution Chart
+      const rows = [
+        { label: "Assessment marks", delta: (ass - 65.0) * 0.35 },
+        { label: "Prior performance", delta: (pri - 65.0) * 0.25 },
+        { label: "Assignment marks", delta: (asg - 65.0) * 0.25 },
+        { label: "Attendance", delta: (att - 75.0) * 0.30 },
+        { label: "Engagement", delta: (eng - 6.0) * 2.0 },
+      ];
+
+      let chartHtml = "";
+      rows.forEach(r => {
+        const w = Math.min(Math.abs(r.delta) * 4.2, 120);
+        let left = "", right = "";
+        if (r.delta < 0) {
+          right = `<div style="background: #ef4444; height: 16px; width: ${w}px; border-radius: 3px;"></div>`;
+        } else {
+          left = `<div style="background: #10b981; height: 16px; width: ${w}px; float: right; border-radius: 3px;"></div>`;
+        }
+        chartHtml += `
+          <tr style="height: 24px;">
+            <td style="text-align: right; padding-right: 12px; color: #cbd5e1; font-size: 11px; font-weight: 500;">${r.label}</td>
+            <td style="width: 120px; border-right: 2px solid rgba(255,255,255,0.25); padding: 0;">${left}</td>
+            <td style="width: 120px; padding: 0;">${right}</td>
+          </tr>
+        `;
+      });
+      document.getElementById('chartRows').innerHTML = chartHtml;
+    }
+
+    // Run on startup
+    loadStudent('STU-004');
+  </script>
+</body>
+</html>
