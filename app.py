@@ -30,6 +30,16 @@ html, body, [class*="css"] {
 
 #MainMenu, footer, header {
     visibility: hidden;
+    display: none !important;
+}
+
+.stDeployButton,
+[data-testid="stToolbar"],
+[data-testid="stDecoration"],
+[data-testid="stStatusWidget"],
+[data-testid="stHeader"],
+[data-testid="collapsedControl"] {
+    display: none !important;
 }
 
 .block-container {
