@@ -3,57 +3,152 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SC03: Student Performance & Academic Intervention System</title>
+  <title>SC03 — Student Performance &amp; Academic Intervention System</title>
+  <meta name="description" content="SC03 academic early warning and intervention decision-support tool comparing rule-based scoring with a trained neural network across five student indicators.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563eb'/%3E%3Cpath d='M16 7L4 13l12 6 10-5v7h2v-8L16 7zm-7 9.5v4.2c0 2.1 3.1 3.8 7 3.8s7-1.7 7-3.8v-4.2l-7 3.5-7-3.5z' fill='%23ffffff'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    :root {
+      --bg-page: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.88);
+      --bg-subcard: rgba(30, 41, 59, 0.65);
+      --bg-input: #0f172a;
+      --bg-select: #1e293b;
+      --bg-terminal: #020617;
+      --border-main: rgba(51, 65, 85, 0.85);
+      --border-sub: rgba(51, 65, 85, 0.65);
+      --border-input: #475569;
+      --text-main: #f8fafc;
+      --text-body: #cbd5e1;
+      --text-muted: #94a3b8;
+      --divider-axis: rgba(255, 255, 255, 0.25);
+      --track-bg: #334155;
+      --tick-bg: #cbd5e1;
+      --ptr-base: #ffffff;
+      --lbl-neural: #93c5fd;
     }
+
+    html.light {
+      --bg-page: #f1f5f9;
+      --bg-card: #ffffff;
+      --bg-subcard: #f8fafc;
+      --bg-input: #ffffff;
+      --bg-select: #f8fafc;
+      --bg-terminal: #f8fafc;
+      --border-main: #cbd5e1;
+      --border-sub: #e2e8f0;
+      --border-input: #94a3b8;
+      --text-main: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --divider-axis: rgba(15, 23, 42, 0.25);
+      --track-bg: #cbd5e1;
+      --tick-bg: #475569;
+      --ptr-base: #0f172a;
+      --lbl-neural: #1d4ed8;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      max-width: 100%;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
     .mono {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
+
+    .theme-card {
+      background-color: var(--bg-card);
+      border-color: var(--border-main);
+    }
+
+    .theme-subcard {
+      background-color: var(--bg-subcard);
+      border-color: var(--border-sub);
+    }
+
+    .theme-input {
+      background-color: var(--bg-input);
+      border-color: var(--border-input);
+    }
+
+    .theme-select {
+      background-color: var(--bg-select);
+      border-color: var(--border-main);
+      color: var(--text-main);
+    }
+
+    .theme-divider {
+      border-color: var(--border-sub);
+    }
+
+    .theme-heading { color: var(--text-main); }
+    .theme-body { color: var(--text-body); }
+    .theme-muted { color: var(--text-muted); }
+
     /* Chrome/Safari removal of up/down arrows on number inputs */
-    input[type=number]::-webkit-inner-spin-button, 
-    input[type=number]::-webkit-outer-spin-button { 
-      -webkit-appearance: none; 
-      margin: 0; 
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
     input[type=number] {
       -moz-appearance: textfield;
     }
   </style>
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('sc03_theme') === 'light') {
+          document.documentElement.classList.add('light');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
-<body class="bg-[#0f172a] text-slate-100 min-h-screen p-3 md:px-6 md:py-4 antialiased selection:bg-blue-600 selection:text-white">
+<body class="min-h-screen p-3 sm:p-4 md:px-6 md:py-4 antialiased selection:bg-blue-600 selection:text-white">
   <div class="w-full mx-auto space-y-4">
-    
+
     <!-- Header -->
-    <header class="rounded-2xl border border-slate-700/80 bg-slate-900/90 px-6 py-4 shadow-xl">
-      <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">
-        Student Performance & Academic Intervention System
-      </h1>
-      <p class="text-sm text-slate-300 mt-1 leading-relaxed">
-        An early warning system that evaluates five student academic indicators to identify at-risk students and recommend targeted faculty support.
-      </p>
+    <header class="theme-card rounded-2xl border px-4 py-4 sm:px-6 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="min-w-0">
+        <h1 class="theme-heading text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+          Student Performance &amp; Academic Intervention System
+        </h1>
+        <p class="theme-body text-xs sm:text-sm mt-1 leading-relaxed">
+          An early warning system that evaluates five student academic indicators to identify at-risk students and recommend targeted faculty support.
+        </p>
+      </div>
+
+      <button type="button" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark and light theme"
+              class="theme-subcard theme-heading shrink-0 self-start sm:self-center inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-semibold hover:opacity-90 transition cursor-pointer">
+        <span id="themeIcon" aria-hidden="true">☀️</span>
+        <span id="themeLabel">Light Mode</span>
+      </button>
     </header>
 
     <!-- Main Two-Column Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-      
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+
       <!-- Left Panel: Input Indicators with Manual Typing and Sliders -->
-      <div class="lg:col-span-5 bg-slate-900/80 border border-slate-700/80 rounded-2xl p-5 shadow-xl flex flex-col gap-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200">
+      <section class="theme-card lg:col-span-5 rounded-2xl border p-4 sm:p-5 shadow-xl flex flex-col gap-4 min-w-0">
+        <div class="theme-divider flex items-center justify-between pb-3 border-b gap-2">
+          <h2 class="theme-heading text-xs sm:text-sm font-bold uppercase tracking-wider">
             Student Indicators
           </h2>
-          <span class="text-xs text-slate-400">5 Continuous Features</span>
+          <span class="theme-muted text-xs whitespace-nowrap">5 Continuous Features</span>
         </div>
 
         <!-- Student Record Selector -->
         <div>
-          <label for="recSelect" class="block text-xs font-semibold text-slate-300 mb-1.5">
+          <label for="recSelect" class="theme-body block text-xs font-semibold mb-1.5">
             Choose an example student profile:
           </label>
-          <select id="recSelect" onchange="loadStudent(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select id="recSelect" onchange="loadStudent(this.value)" class="theme-select w-full border rounded-xl px-3 py-2 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="STU-004" selected>STU-004 (Borderline student — models diverge)</option>
             <option value="STU-001">STU-001 (High achiever — low risk)</option>
             <option value="STU-002">STU-002 (Average performance — medium risk)</option>
@@ -65,127 +160,127 @@
 
         <!-- Indicator Inputs: BOTH Direct Typing & Range Slider -->
         <div class="flex-1 flex flex-col justify-between gap-3.5">
-          
+
           <!-- 1. Attendance Rate -->
-          <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5">
-            <div class="flex justify-between items-start mb-2.5">
-              <div>
-                <label for="numAtt" class="block text-xs font-semibold text-slate-200">
+          <div class="theme-subcard border rounded-xl p-3.5">
+            <div class="flex justify-between items-start gap-2 mb-2.5">
+              <div class="min-w-0">
+                <label for="numAtt" class="theme-heading block text-xs font-semibold">
                   Attendance Rate
                 </label>
-                <span class="text-[11px] text-slate-400">Minimum recommended threshold: 75%</span>
+                <span class="theme-muted text-[11px] block">Minimum recommended threshold: 75%</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <input type="number" id="numAtt" min="0" max="100" step="0.5" value="78.0" 
-                       oninput="syncFromInput('att')" 
-                       class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <input type="number" id="numAtt" min="0" max="100" step="0.5" value="78.0"
+                       oninput="syncFromInput('att')"
+                       class="theme-input w-20 px-2 py-1 text-right text-xs font-bold border rounded-md text-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <span class="theme-muted text-xs font-semibold w-4">%</span>
               </div>
             </div>
-            <input type="range" id="sliderAtt" min="0" max="100" step="0.5" value="78" 
+            <input type="range" id="sliderAtt" aria-label="Attendance Rate slider" min="0" max="100" step="0.5" value="78"
                    oninput="syncFromSlider('att')"
-                   class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
-            <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+                   class="w-full h-1.5 bg-slate-600/50 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="theme-muted flex justify-between text-[10px] mt-1.5">
               <span>0%</span>
               <span>100%</span>
             </div>
           </div>
 
           <!-- 2. Continuous Assessment -->
-          <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5">
-            <div class="flex justify-between items-start mb-2.5">
-              <div>
-                <label for="numAss" class="block text-xs font-semibold text-slate-200">
+          <div class="theme-subcard border rounded-xl p-3.5">
+            <div class="flex justify-between items-start gap-2 mb-2.5">
+              <div class="min-w-0">
+                <label for="numAss" class="theme-heading block text-xs font-semibold">
                   Continuous Assessment Score
                 </label>
-                <span class="text-[11px] text-slate-400">Quizzes, midterms, and class tests</span>
+                <span class="theme-muted text-[11px] block">Quizzes, midterms, and class tests</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <input type="number" id="numAss" min="0" max="100" step="0.5" value="48.0" 
-                       oninput="syncFromInput('ass')" 
-                       class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <input type="number" id="numAss" min="0" max="100" step="0.5" value="48.0"
+                       oninput="syncFromInput('ass')"
+                       class="theme-input w-20 px-2 py-1 text-right text-xs font-bold border rounded-md text-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <span class="theme-muted text-xs font-semibold w-4">%</span>
               </div>
             </div>
-            <input type="range" id="sliderAss" min="0" max="100" step="0.5" value="48" 
+            <input type="range" id="sliderAss" aria-label="Continuous Assessment Score slider" min="0" max="100" step="0.5" value="48"
                    oninput="syncFromSlider('ass')"
-                   class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
-            <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+                   class="w-full h-1.5 bg-slate-600/50 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="theme-muted flex justify-between text-[10px] mt-1.5">
               <span>0%</span>
               <span>100%</span>
             </div>
           </div>
 
           <!-- 3. Assignment Completion -->
-          <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5">
-            <div class="flex justify-between items-start mb-2.5">
-              <div>
-                <label for="numAsg" class="block text-xs font-semibold text-slate-200">
+          <div class="theme-subcard border rounded-xl p-3.5">
+            <div class="flex justify-between items-start gap-2 mb-2.5">
+              <div class="min-w-0">
+                <label for="numAsg" class="theme-heading block text-xs font-semibold">
                   Assignment Completion Rate
                 </label>
-                <span class="text-[11px] text-slate-400">Submitted homework and lab work</span>
+                <span class="theme-muted text-[11px] block">Submitted homework and lab work</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <input type="number" id="numAsg" min="0" max="100" step="0.5" value="52.0" 
-                       oninput="syncFromInput('asg')" 
-                       class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <input type="number" id="numAsg" min="0" max="100" step="0.5" value="52.0"
+                       oninput="syncFromInput('asg')"
+                       class="theme-input w-20 px-2 py-1 text-right text-xs font-bold border rounded-md text-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <span class="theme-muted text-xs font-semibold w-4">%</span>
               </div>
             </div>
-            <input type="range" id="sliderAsg" min="0" max="100" step="0.5" value="52" 
+            <input type="range" id="sliderAsg" aria-label="Assignment Completion Rate slider" min="0" max="100" step="0.5" value="52"
                    oninput="syncFromSlider('asg')"
-                   class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
-            <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+                   class="w-full h-1.5 bg-slate-600/50 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="theme-muted flex justify-between text-[10px] mt-1.5">
               <span>0%</span>
               <span>100%</span>
             </div>
           </div>
 
           <!-- 4. LMS Engagement Score -->
-          <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5">
-            <div class="flex justify-between items-start mb-2.5">
-              <div>
-                <label for="numEng" class="block text-xs font-semibold text-slate-200">
+          <div class="theme-subcard border rounded-xl p-3.5">
+            <div class="flex justify-between items-start gap-2 mb-2.5">
+              <div class="min-w-0">
+                <label for="numEng" class="theme-heading block text-xs font-semibold">
                   LMS Engagement Score
                 </label>
-                <span class="text-[11px] text-slate-400">Course portal logins and forum activity</span>
+                <span class="theme-muted text-[11px] block">Course portal logins and forum activity</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <input type="number" id="numEng" min="0" max="10" step="0.1" value="9.0" 
-                       oninput="syncFromInput('eng')" 
-                       class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                <span class="text-xs font-semibold text-slate-400 w-8">/ 10</span>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <input type="number" id="numEng" min="0" max="10" step="0.1" value="9.0"
+                       oninput="syncFromInput('eng')"
+                       class="theme-input w-20 px-2 py-1 text-right text-xs font-bold border rounded-md text-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <span class="theme-muted text-xs font-semibold w-8">/ 10</span>
               </div>
             </div>
-            <input type="range" id="sliderEng" min="0" max="10" step="0.1" value="9" 
+            <input type="range" id="sliderEng" aria-label="LMS Engagement Score slider" min="0" max="10" step="0.1" value="9"
                    oninput="syncFromSlider('eng')"
-                   class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500">
-            <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+                   class="w-full h-1.5 bg-slate-600/50 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+            <div class="theme-muted flex justify-between text-[10px] mt-1.5">
               <span>0.0</span>
               <span>10.0</span>
             </div>
           </div>
 
           <!-- 5. Prior Academic Performance -->
-          <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5">
-            <div class="flex justify-between items-start mb-2.5">
-              <div>
-                <label for="numPri" class="block text-xs font-semibold text-slate-200">
+          <div class="theme-subcard border rounded-xl p-3.5">
+            <div class="flex justify-between items-start gap-2 mb-2.5">
+              <div class="min-w-0">
+                <label for="numPri" class="theme-heading block text-xs font-semibold">
                   Prior Academic Performance
                 </label>
-                <span class="text-[11px] text-slate-400">Previous semester score / CGPA equivalent</span>
+                <span class="theme-muted text-[11px] block">Previous semester score / CGPA equivalent</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <input type="number" id="numPri" min="0" max="100" step="0.5" value="45.0" 
-                       oninput="syncFromInput('pri')" 
-                       class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <input type="number" id="numPri" min="0" max="100" step="0.5" value="45.0"
+                       oninput="syncFromInput('pri')"
+                       class="theme-input w-20 px-2 py-1 text-right text-xs font-bold border rounded-md text-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <span class="theme-muted text-xs font-semibold w-4">%</span>
               </div>
             </div>
-            <input type="range" id="sliderPri" min="0" max="100" step="0.5" value="45" 
+            <input type="range" id="sliderPri" aria-label="Prior Academic Performance slider" min="0" max="100" step="0.5" value="45"
                    oninput="syncFromSlider('pri')"
-                   class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
-            <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+                   class="w-full h-1.5 bg-slate-600/50 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="theme-muted flex justify-between text-[10px] mt-1.5">
               <span>0%</span>
               <span>100%</span>
             </div>
@@ -193,97 +288,100 @@
 
         </div>
 
-        <div class="pt-3 border-t border-slate-800">
-          <button onclick="evaluateModels()" class="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-500 text-white shadow-md transition flex items-center justify-center gap-2">
+        <!-- Inline Validation Error Message directly above button -->
+        <div id="btnErrorMsg" role="alert" class="hidden p-3 rounded-xl border border-rose-500/40 bg-rose-500/10 text-rose-400 text-xs font-medium"></div>
+
+        <div class="theme-divider pt-3 border-t">
+          <button type="button" onclick="handleRunClick()" class="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-500 text-white shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
             <span>Run Assessment</span>
           </button>
         </div>
-      </div>
+      </section>
 
       <!-- Right Panel: Results & Explanations -->
-      <div class="lg:col-span-7 bg-slate-900/80 border border-slate-700/80 rounded-2xl p-5 shadow-xl flex flex-col gap-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200">
-            Assessment Results & Model Comparison
+      <section class="theme-card lg:col-span-7 rounded-2xl border p-4 sm:p-5 shadow-xl flex flex-col gap-4 min-w-0">
+        <div class="theme-divider flex items-center justify-between pb-3 border-b gap-2">
+          <h2 class="theme-heading text-xs sm:text-sm font-bold uppercase tracking-wider">
+            Assessment Results &amp; Model Comparison
           </h2>
-          <span class="text-xs text-emerald-400 font-semibold">Active Prediction</span>
+          <span id="statusBadge" class="text-xs text-emerald-500 font-semibold whitespace-nowrap">Active Prediction</span>
         </div>
 
         <!-- Top 2 Cards: Baseline Rule vs Neural Model -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
           <!-- Baseline Card -->
-          <div class="rounded-xl border border-slate-700 bg-slate-800/80 p-5 shadow-sm flex flex-col justify-between">
+          <div class="theme-subcard rounded-xl border p-4 sm:p-5 shadow-sm flex flex-col justify-between">
             <div>
-              <div class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+              <div class="theme-muted text-xs font-semibold uppercase tracking-wide mb-1.5">
                 Rule-Based Baseline
               </div>
               <div class="flex flex-wrap items-baseline gap-2.5">
-                <span id="cardBaseBand" class="text-3xl font-bold text-amber-400">Medium</span>
-                <span id="cardBaseScore" class="text-xs font-medium text-slate-300 whitespace-nowrap">score 61.7 (50 to &lt;70)</span>
+                <span id="cardBaseBand" class="text-2xl sm:text-3xl font-bold text-amber-500">Medium</span>
+                <span id="cardBaseScore" class="theme-body text-xs font-medium whitespace-nowrap">score 61.7 (50 to &lt;70)</span>
               </div>
             </div>
-            <div class="mt-4 p-3 rounded-lg bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
-              <span class="font-semibold text-slate-400">Action:</span> <span id="cardBaseAction">Mentoring or study plan</span>
+            <div class="theme-card mt-4 p-3 rounded-lg border text-xs theme-body">
+              <span class="theme-muted font-semibold">Action:</span> <span id="cardBaseAction">Mentoring or study plan</span>
             </div>
           </div>
 
           <!-- Neural Model Card -->
-          <div class="rounded-xl border border-blue-600/70 bg-slate-800/80 p-5 shadow-sm flex flex-col justify-between">
+          <div class="theme-subcard rounded-xl border border-blue-500/60 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
             <div>
-              <div class="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-1.5">
+              <div class="text-xs font-semibold text-blue-500 uppercase tracking-wide mb-1.5">
                 Neural Network (ANN)
               </div>
               <div class="flex flex-wrap items-baseline gap-2.5">
-                <span id="cardNeuralBand" class="text-3xl font-bold text-rose-400">High</span>
-                <span class="text-xs font-medium text-slate-400 whitespace-nowrap">MLPClassifier</span>
+                <span id="cardNeuralBand" class="text-2xl sm:text-3xl font-bold text-rose-500">High</span>
+                <span class="theme-muted text-xs font-medium whitespace-nowrap">MLPClassifier</span>
               </div>
             </div>
-            <div class="mt-4 p-3 rounded-lg bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
-              <span class="font-semibold text-blue-400">Action:</span> <span id="cardNeuralAction">Faculty consultation</span>
+            <div class="theme-card mt-4 p-3 rounded-lg border text-xs theme-body">
+              <span class="text-blue-500 font-semibold">Action:</span> <span id="cardNeuralAction">Faculty consultation</span>
             </div>
           </div>
 
         </div>
 
-        <!-- Disagreement / Consensus Alert -->
-        <div id="alertBanner" class="p-3.5 rounded-xl border text-xs font-medium flex items-center gap-2 bg-amber-500/10 border-amber-500/30 text-amber-300">
+        <!-- Disagreement / Consensus / Error Alert -->
+        <div id="alertBanner" class="p-3.5 rounded-xl border text-xs font-medium flex items-center gap-2 bg-amber-500/10 border-amber-500/30 text-amber-500">
           <span>Notice: Baseline predicts <strong>Medium Risk</strong>, while the Neural Network predicts <strong>High Risk</strong>. Check the indicator contributions below.</span>
         </div>
 
         <!-- Scale (0 to 100) - Pure HTML/CSS -->
-        <div class="p-5 rounded-xl bg-slate-800/50 border border-slate-700/60">
-          <div class="text-xs font-bold text-slate-200 mb-3.5">
+        <div class="theme-subcard p-4 sm:p-5 rounded-xl border">
+          <div class="theme-heading text-xs font-bold mb-3.5">
             Comparison on 0 to 100 Scale
           </div>
           <div class="px-1 pt-6 pb-9 relative select-none">
             <!-- Baseline Marker Above Track -->
             <div id="markerBase" class="absolute top-0 -translate-x-1/2 flex flex-col items-center transition-all duration-200" style="left: 61.7%;">
-              <span id="lblBase" class="text-[11px] font-bold text-white whitespace-nowrap leading-none mb-1">baseline 61.7</span>
-              <span class="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[6px] border-t-white"></span>
+              <span id="lblBase" class="text-[11px] font-bold whitespace-nowrap leading-none mb-1" style="color: var(--ptr-base);">baseline 61.7</span>
+              <span class="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[6px]" style="border-top-color: var(--ptr-base);"></span>
             </div>
 
             <!-- Colored Track & Ticks -->
-            <div class="relative h-2.5 w-full rounded-full bg-slate-700 flex">
+            <div class="relative h-2.5 w-full rounded-full flex" style="background-color: var(--track-bg);">
               <div class="h-full bg-rose-500/50 rounded-l-full" style="width: 50%;"></div>
               <div class="h-full bg-amber-500/50" style="width: 20%;"></div>
               <div class="h-full bg-emerald-500/50 rounded-r-full" style="width: 30%;"></div>
 
               <!-- Tick Marks -->
-              <div class="absolute top-1/2 -translate-y-1/2 left-0 w-0.5 h-4 bg-slate-300"></div>
-              <div class="absolute top-1/2 -translate-y-1/2 left-[50%] w-0.5 h-4 bg-slate-300"></div>
-              <div class="absolute top-1/2 -translate-y-1/2 left-[70%] w-0.5 h-4 bg-slate-300"></div>
-              <div class="absolute top-1/2 -translate-y-1/2 right-0 w-0.5 h-4 bg-slate-300"></div>
+              <div class="absolute top-1/2 -translate-y-1/2 left-0 w-0.5 h-4" style="background-color: var(--tick-bg);"></div>
+              <div class="absolute top-1/2 -translate-y-1/2 left-[50%] w-0.5 h-4" style="background-color: var(--tick-bg);"></div>
+              <div class="absolute top-1/2 -translate-y-1/2 left-[70%] w-0.5 h-4" style="background-color: var(--tick-bg);"></div>
+              <div class="absolute top-1/2 -translate-y-1/2 right-0 w-0.5 h-4" style="background-color: var(--tick-bg);"></div>
             </div>
 
             <!-- Neural Marker Below Track -->
             <div id="markerNeural" class="absolute top-[38px] -translate-x-1/2 flex flex-col items-center transition-all duration-200" style="left: 42%;">
-              <span class="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-b-[6px] border-b-blue-400"></span>
-              <span id="lblNeural" class="text-[11px] font-bold text-blue-300 whitespace-nowrap leading-none mt-1">neural (high)</span>
+              <span class="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-b-[6px] border-b-blue-500"></span>
+              <span id="lblNeural" class="text-[11px] font-bold whitespace-nowrap leading-none mt-1" style="color: var(--lbl-neural);">neural (high)</span>
             </div>
 
             <!-- Scale Axis Labels -->
-            <div class="relative h-4 mt-7 text-[11px] font-semibold text-slate-400">
+            <div class="theme-muted relative h-4 mt-7 text-[10px] sm:text-[11px] font-semibold">
               <span class="absolute left-0 whitespace-nowrap">0 (High Risk)</span>
               <span class="absolute left-[50%] -translate-x-1/2 whitespace-nowrap">50</span>
               <span class="absolute left-[70%] -translate-x-1/2 whitespace-nowrap">70</span>
@@ -292,40 +390,50 @@
           </div>
         </div>
 
-        <!-- Feature Contribution Diverging Chart (expands smoothly to eliminate empty space) -->
-        <div class="p-5 rounded-xl bg-slate-800/50 border border-slate-700/60 flex-1 flex flex-col justify-center">
-          <div class="flex justify-between items-center text-xs font-bold text-slate-200 mb-3">
+        <!-- Feature Contribution Diverging Chart (Responsive fixed-layout table, zero horizontal scroll) -->
+        <div class="theme-subcard p-4 sm:p-5 rounded-xl border flex-1 flex flex-col justify-center">
+          <div class="flex flex-wrap justify-between items-center gap-2 text-xs font-bold theme-heading mb-3">
             <span>How each indicator affects the assessment:</span>
-            <span class="text-[11px] text-slate-400 whitespace-nowrap">Deviation from benchmark</span>
+            <span class="theme-muted text-[11px] font-medium whitespace-nowrap">Deviation from benchmark</span>
           </div>
-          <table class="w-full border-collapse text-xs">
+          <table class="w-full border-collapse text-xs" style="table-layout: fixed;">
             <thead>
-              <tr class="text-[10px] text-slate-400 uppercase tracking-wider">
-                <th class="w-36 text-right pr-3 pb-1.5 font-semibold whitespace-nowrap">Indicator</th>
-                <th class="text-right pr-2 pb-1.5 text-emerald-400 font-bold whitespace-nowrap">← Lowers Risk</th>
-                <th class="text-left pl-2 pb-1.5 text-rose-400 font-bold whitespace-nowrap">Raises Risk →</th>
+              <tr class="theme-muted text-[10px] uppercase tracking-wider">
+                <th class="w-[34%] sm:w-[32%] text-right pr-2 sm:pr-3 pb-1.5 font-semibold truncate">Indicator</th>
+                <th class="w-[33%] sm:w-[34%] text-right pr-2 pb-1.5 text-emerald-500 font-bold whitespace-nowrap">← Lowers Risk</th>
+                <th class="w-[33%] sm:w-[34%] text-left pl-2 pb-1.5 text-rose-500 font-bold whitespace-nowrap">Raises Risk →</th>
               </tr>
             </thead>
-            <tbody id="chartRows">
-            </tbody>
+            <tbody id="chartRows"></tbody>
           </table>
         </div>
 
-        <div class="p-3.5 rounded-xl bg-slate-800/40 border border-slate-700 text-xs text-slate-300 flex items-center gap-2">
+        <div class="theme-subcard p-3.5 rounded-xl border text-xs theme-body flex items-center gap-2">
           <span>Faculty Notice: Indicators provide advisory decision support. A human mentor makes the final evaluation.</span>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
 
     <!-- Bottom Panel: Hidden during valid presentation; shown automatically on validation error -->
-    <div id="validationPanel" class="hidden rounded-2xl border border-rose-500/40 bg-slate-950 overflow-hidden shadow-xl">
-      <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex items-center justify-between">
-        <span class="text-xs font-semibold text-rose-300">Input Validation Notice</span>
-        <span class="text-xs text-rose-400 mono">Action Required</span>
+    <div id="validationPanel" class="hidden rounded-2xl border border-rose-500/40 overflow-hidden shadow-xl" style="background-color: var(--bg-terminal);">
+      <div class="theme-subcard px-4 py-2 border-b theme-divider flex items-center justify-between">
+        <span class="text-xs font-semibold text-rose-500">Input Validation Notice</span>
+        <span class="text-xs text-rose-500 mono">Action Required</span>
       </div>
-      <div id="terminalBody" class="mono text-xs p-4 space-y-1 text-slate-300">
-      </div>
+      <div id="terminalBody" class="mono text-xs p-4 space-y-1 theme-body"></div>
     </div>
+
+    <!-- Clean Footer with Verified Links & Copyright Year -->
+    <footer class="theme-card rounded-2xl border px-4 py-3.5 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs theme-muted">
+      <div>
+        &copy; <span id="copyrightYear">2026</span> SC03 Student Performance &amp; Academic Intervention System
+      </div>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="./index.html" class="hover:text-blue-500 transition">Dashboard</a>
+        <a href="https://github.com/okayyyabhishek/SC03-Student-Performance-and-Academic-Intervention-System-Approximate-answer/blob/step-6-testing/docs/STEP-6.md" target="_blank" rel="noopener noreferrer" class="hover:text-blue-500 transition">Step 6 Report</a>
+        <a href="https://github.com/okayyyabhishek/SC03-Student-Performance-and-Academic-Intervention-System-Approximate-answer" target="_blank" rel="noopener noreferrer" class="hover:text-blue-500 transition">GitHub Repository</a>
+      </div>
+    </footer>
 
   </div>
 
@@ -337,6 +445,21 @@
       'STU-003': { att: 55, ass: 35, asg: 30, eng: 3, pri: 40 },
       'STU-BAD': { att: 112, ass: 84, asg: 88, eng: -1, pri: 81 },
     };
+
+    function updateThemeUI() {
+      const isLight = document.documentElement.classList.contains('light');
+      document.getElementById('themeIcon').textContent = isLight ? '🌙' : '☀️';
+      document.getElementById('themeLabel').textContent = isLight ? 'Dark Mode' : 'Light Mode';
+    }
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      root.classList.toggle('light');
+      try {
+        localStorage.setItem('sc03_theme', root.classList.contains('light') ? 'light' : 'dark');
+      } catch (e) {}
+      updateThemeUI();
+    }
 
     function loadStudent(id) {
       if (studentDB[id]) {
@@ -386,44 +509,83 @@
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
+    function handleRunClick() {
+      const ok = evaluateModels();
+      if (!ok) {
+        document.getElementById('btnErrorMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
     function evaluateModels() {
-      const att = parseFloat(document.getElementById('numAtt').value);
-      const ass = parseFloat(document.getElementById('numAss').value);
-      const asg = parseFloat(document.getElementById('numAsg').value);
-      const eng = parseFloat(document.getElementById('numEng').value);
-      const pri = parseFloat(document.getElementById('numPri').value);
+      const rawAtt = document.getElementById('numAtt').value.trim();
+      const rawAss = document.getElementById('numAss').value.trim();
+      const rawAsg = document.getElementById('numAsg').value.trim();
+      const rawEng = document.getElementById('numEng').value.trim();
+      const rawPri = document.getElementById('numPri').value.trim();
+
+      const att = parseFloat(rawAtt);
+      const ass = parseFloat(rawAss);
+      const asg = parseFloat(rawAsg);
+      const eng = parseFloat(rawEng);
+      const pri = parseFloat(rawPri);
 
       const terminal = document.getElementById('terminalBody');
+      const valPanel = document.getElementById('validationPanel');
+      const btnErr = document.getElementById('btnErrorMsg');
+      const statusBadge = document.getElementById('statusBadge');
       const rec = document.getElementById('recSelect').value;
 
       // Validation
       let err = null;
-      if (isNaN(att) || isNaN(ass) || isNaN(asg) || isNaN(eng) || isNaN(pri)) {
-        err = "Please enter valid numbers in all 5 fields.";
+      if (!rawAtt || !rawAss || !rawAsg || !rawEng || !rawPri) {
+        err = "All five indicator fields are required. Enter numbers before running the assessment.";
+      } else if (isNaN(att) || isNaN(ass) || isNaN(asg) || isNaN(eng) || isNaN(pri)) {
+        err = "Please enter valid numeric values in all five indicator fields.";
       } else if (att < 0 || att > 100) {
-        err = `Attendance rate must be between 0 and 100, received ${att}`;
+        err = `Attendance rate must be between 0 and 100%, received ${att}%.`;
       } else if (ass < 0 || ass > 100) {
-        err = `Continuous assessment score must be between 0 and 100, received ${ass}`;
+        err = `Continuous assessment score must be between 0 and 100%, received ${ass}%.`;
       } else if (asg < 0 || asg > 100) {
-        err = `Assignment completion rate must be between 0 and 100, received ${asg}`;
+        err = `Assignment completion rate must be between 0 and 100%, received ${asg}%.`;
       } else if (eng < 0 || eng > 10) {
-        err = `LMS engagement score must be between 0 and 10, received ${eng}`;
+        err = `LMS engagement score must be between 0 and 10, received ${eng}.`;
       } else if (pri < 0 || pri > 100) {
-        err = `Prior performance must be between 0 and 100, received ${pri}`;
+        err = `Prior academic performance must be between 0 and 100%, received ${pri}%.`;
       }
 
-      const valPanel = document.getElementById('validationPanel');
       if (err) {
+        btnErr.textContent = err;
+        btnErr.classList.remove('hidden');
+
         valPanel.classList.remove('hidden');
         terminal.innerHTML = `
-          <div><span class="text-rose-400 font-bold">[FAIL]</span> ${err}</div>
-          <div class="text-slate-400">       Execution halted: model does not run on invalid inputs.</div>
+          <div><span class="text-rose-500 font-bold">[FAIL]</span> ${err}</div>
+          <div class="theme-muted">       Execution halted: model does not compute predictions on invalid inputs.</div>
         `;
-        return;
+
+        statusBadge.textContent = 'Invalid Input';
+        statusBadge.className = 'text-xs text-rose-500 font-semibold whitespace-nowrap';
+
+        document.getElementById('cardBaseBand').textContent = '—';
+        document.getElementById('cardBaseBand').style.color = 'var(--text-muted)';
+        document.getElementById('cardBaseScore').textContent = 'input out of range';
+        document.getElementById('cardBaseAction').textContent = 'Fix highlighted input error';
+
+        document.getElementById('cardNeuralBand').textContent = '—';
+        document.getElementById('cardNeuralBand').style.color = 'var(--text-muted)';
+        document.getElementById('cardNeuralAction').textContent = 'Fix highlighted input error';
+
+        const alert = document.getElementById('alertBanner');
+        alert.className = "p-3.5 rounded-xl border text-xs font-medium flex items-center gap-2 bg-rose-500/10 border-rose-500/30 text-rose-500";
+        alert.innerHTML = `<span><strong>Validation Error:</strong> ${err}</span>`;
+        return false;
       }
 
+      btnErr.classList.add('hidden');
       valPanel.classList.add('hidden');
       terminal.innerHTML = '';
+      statusBadge.textContent = 'Active Prediction';
+      statusBadge.className = 'text-xs text-emerald-500 font-semibold whitespace-nowrap';
 
       // 1. Baseline Rule Calculation: 0.3*att + 0.3*ass + 0.2*asg + 0.1*(eng*10) + 0.1*pri
       const baseScore = 0.30 * att + 0.30 * ass + 0.20 * asg + 0.10 * (eng * 10) + 0.10 * pri;
@@ -457,14 +619,14 @@
       // 3. Disagreement Banner
       const alert = document.getElementById('alertBanner');
       if (baseBand.toLowerCase() !== neuralBand.toLowerCase()) {
-        alert.className = "p-3 rounded-xl border text-xs font-medium flex items-center gap-2 mb-4 bg-amber-500/10 border-amber-500/30 text-amber-300";
+        alert.className = "p-3.5 rounded-xl border text-xs font-medium flex items-center gap-2 bg-amber-500/10 border-amber-500/30 text-amber-500";
         alert.innerHTML = `<span>Notice: Baseline predicts <strong>${baseBand} Risk</strong>, while Neural Network predicts <strong>${neuralBand} Risk</strong>. Check the indicator contributions below.</span>`;
       } else {
-        alert.className = "p-3 rounded-xl border text-xs font-medium flex items-center gap-2 mb-4 bg-emerald-500/10 border-emerald-500/30 text-emerald-300";
+        alert.className = "p-3.5 rounded-xl border text-xs font-medium flex items-center gap-2 bg-emerald-500/10 border-emerald-500/30 text-emerald-500";
         alert.innerHTML = `<span>Consensus: Both the baseline rule and neural network agree on <strong>${baseBand} Risk</strong>.</span>`;
       }
 
-      // 4. Scale Marker Update (Pure CSS % positioning, clamped inside bounds so labels never clip)
+      // 4. Scale Marker Update (Pure CSS % positioning)
       const basePos = Math.max(6, Math.min(94, baseScore));
       const neuralPos = Math.max(6, Math.min(94, neuralScore));
 
@@ -474,7 +636,7 @@
       document.getElementById('markerNeural').style.left = `${neuralPos}%`;
       document.getElementById('lblNeural').textContent = `neural (${neuralBand.toLowerCase()})`;
 
-      // 5. Diverging Feature Contribution Chart
+      // 5. Diverging Feature Contribution Chart (Percentage widths for zero horizontal overflow)
       const rows = [
         { label: "Assessment marks", delta: (ass - 65.0) * 0.35 },
         { label: "Prior performance", delta: (pri - 65.0) * 0.25 },
@@ -485,25 +647,28 @@
 
       let chartHtml = "";
       rows.forEach(r => {
-        const w = Math.min(Math.abs(r.delta) * 5.8, 175);
+        const pctW = Math.min(Math.abs(r.delta) * 4.5, 92);
         let left = "", right = "";
         if (r.delta < 0) {
-          right = `<div style="background: #ef4444; height: 18px; width: ${w}px; border-radius: 3px;"></div>`;
+          right = `<div style="background: #ef4444; height: 18px; width: ${pctW}%; border-radius: 3px;"></div>`;
         } else {
-          left = `<div style="background: #10b981; height: 18px; width: ${w}px; float: right; border-radius: 3px;"></div>`;
+          left = `<div style="background: #10b981; height: 18px; width: ${pctW}%; float: right; border-radius: 3px;"></div>`;
         }
         chartHtml += `
           <tr style="height: 30px;">
-            <td style="text-align: right; padding-right: 14px; color: #cbd5e1; font-size: 12px; font-weight: 500; white-space: nowrap;">${r.label}</td>
-            <td style="width: 180px; border-right: 2px solid rgba(255,255,255,0.25); padding: 0;">${left}</td>
-            <td style="width: 180px; padding: 0;">${right}</td>
+            <td class="theme-body text-right pr-2 sm:pr-3 text-[11px] sm:text-xs font-medium truncate">${r.label}</td>
+            <td style="border-right: 2px solid var(--divider-axis); padding: 0;">${left}</td>
+            <td style="padding: 0;">${right}</td>
           </tr>
         `;
       });
       document.getElementById('chartRows').innerHTML = chartHtml;
+      return true;
     }
 
-    // Run on startup
+    // Initialize theme, copyright year, and default student
+    updateThemeUI();
+    document.getElementById('copyrightYear').textContent = new Date().getFullYear();
     loadStudent('STU-004');
   </script>
 </body>

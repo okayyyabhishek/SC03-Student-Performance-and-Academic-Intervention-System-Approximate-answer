@@ -446,19 +446,19 @@ with col_results:
 
     chart_rows = ""
     for feat_name, delta in weights.items():
-        w = min(abs(delta) * 4.0, 110.0)
+        pct_w = min(abs(delta) * 4.5, 92.0)
         if delta < 0:
-            left_cell = '<div style="width: 110px; height: 14px;"></div>'
-            right_cell = f'<div style="background: #ef4444; height: 14px; width: {w}px; border-radius: 2px;"></div>'
+            left_cell = '<div style="width: 100%; height: 14px;"></div>'
+            right_cell = f'<div style="background: #ef4444; height: 14px; width: {pct_w}%; border-radius: 2px;"></div>'
         else:
-            left_cell = f'<div style="background: #10b981; height: 14px; width: {w}px; float: right; border-radius: 2px;"></div>'
-            right_cell = '<div style="width: 110px; height: 14px;"></div>'
+            left_cell = f'<div style="background: #10b981; height: 14px; width: {pct_w}%; float: right; border-radius: 2px;"></div>'
+            right_cell = '<div style="width: 100%; height: 14px;"></div>'
 
         chart_rows += f"""
         <tr style="height: 22px;">
-            <td style="text-align: right; font-size: 11px; color: #cbd5e1; padding-right: 10px; width: 140px; white-space: nowrap;">{feat_name}</td>
-            <td style="width: 110px; border-right: 2px solid rgba(255,255,255,0.25); padding: 0;">{left_cell}</td>
-            <td style="width: 110px; padding: 0;">{right_cell}</td>
+            <td style="text-align: right; font-size: 11px; color: #cbd5e1; padding-right: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{feat_name}</td>
+            <td style="border-right: 2px solid rgba(255,255,255,0.25); padding: 0;">{left_cell}</td>
+            <td style="padding: 0;">{right_cell}</td>
         </tr>
         """
 
@@ -466,12 +466,12 @@ with col_results:
         f"""
         <div style="background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 12px 16px; margin-bottom: 12px;">
             <div style="font-size: 12px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px;">How each indicator affects the assessment:</div>
-            <table style="width: 100%; border-collapse: collapse;">
+            <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
                 <thead>
                     <tr style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">
-                        <th></th>
-                        <th style="text-align: right; padding-right: 8px; color: #34d399; white-space: nowrap;">← Lowers Risk</th>
-                        <th style="text-align: left; padding-left: 8px; color: #f87171; white-space: nowrap;">Raises Risk →</th>
+                        <th style="width: 34%;"></th>
+                        <th style="width: 33%; text-align: right; padding-right: 8px; color: #34d399; white-space: nowrap;">← Lowers Risk</th>
+                        <th style="width: 33%; text-align: left; padding-left: 8px; color: #f87171; white-space: nowrap;">Raises Risk →</th>
                     </tr>
                 </thead>
                 <tbody>
