@@ -317,16 +317,13 @@
       </div>
     </div>
 
-    <!-- Bottom Panel: System Checks & Diagnostic Output -->
-    <div class="rounded-2xl border border-slate-700/80 bg-slate-950 overflow-hidden shadow-xl">
+    <!-- Bottom Panel: Hidden during valid presentation; shown automatically on validation error -->
+    <div id="validationPanel" class="hidden rounded-2xl border border-rose-500/40 bg-slate-950 overflow-hidden shadow-xl">
       <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex items-center justify-between">
-        <span class="text-xs font-semibold text-slate-300">System Verification & Data Log</span>
-        <span class="text-xs text-slate-400 mono">Status: Verified</span>
+        <span class="text-xs font-semibold text-rose-300">Input Validation Notice</span>
+        <span class="text-xs text-rose-400 mono">Action Required</span>
       </div>
       <div id="terminalBody" class="mono text-xs p-4 space-y-1 text-slate-300">
-        <div><span class="text-emerald-400 font-bold">[PASS]</span> Step 1 Data Ingestion: 20 clean benchmark rows loaded.</div>
-        <div><span class="text-emerald-400 font-bold">[PASS]</span> Range Verification: All 5 indicators are within valid ranges.</div>
-        <div><span class="text-emerald-400 font-bold">[PASS]</span> Model Execution: Baseline heuristic and Neural ANN evaluated successfully.</div>
       </div>
     </div>
 
@@ -415,20 +412,18 @@
         err = `Prior performance must be between 0 and 100, received ${pri}`;
       }
 
+      const valPanel = document.getElementById('validationPanel');
       if (err) {
+        valPanel.classList.remove('hidden');
         terminal.innerHTML = `
-          <div><span class="text-emerald-400 font-bold">[PASS]</span> Step 1 Data Ingestion: 20 clean benchmark rows loaded.</div>
           <div><span class="text-rose-400 font-bold">[FAIL]</span> ${err}</div>
-          <div class="text-slate-500">       (Execution halted: model does not run on invalid inputs)</div>
+          <div class="text-slate-400">       Execution halted: model does not run on invalid inputs.</div>
         `;
         return;
       }
 
-      terminal.innerHTML = `
-        <div><span class="text-emerald-400 font-bold">[PASS]</span> Step 1 Data Ingestion: 20 clean benchmark rows loaded.</div>
-        <div><span class="text-emerald-400 font-bold">[PASS]</span> Range Verification: All 5 indicators are within valid ranges.</div>
-        <div><span class="text-emerald-400 font-bold">[PASS]</span> Model Execution: Baseline heuristic and Neural ANN evaluated successfully.</div>
-      `;
+      valPanel.classList.add('hidden');
+      terminal.innerHTML = '';
 
       // 1. Baseline Rule Calculation: 0.3*att + 0.3*ass + 0.2*asg + 0.1*(eng*10) + 0.1*pri
       const baseScore = 0.30 * att + 0.30 * ass + 0.20 * asg + 0.10 * (eng * 10) + 0.10 * pri;

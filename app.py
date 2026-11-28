@@ -486,19 +486,3 @@ with col_results:
     st.caption("Faculty Notice: Indicators provide advisory decision support. A human mentor makes the final evaluation.")
 
     st.markdown("</div>", unsafe_allow_html=True)
-
-
-# -----------------------------------------------------------------------------
-# Bottom Panel: System Checks & Diagnostic Output
-# -----------------------------------------------------------------------------
-st.markdown(
-    """
-    <div style="background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 16px; margin-top: 16px; font-family: monospace; font-size: 11px; color: #94a3b8;">
-        <div style="font-weight: 700; color: #e2e8f0; margin-bottom: 6px;">System Verification & Data Log</div>
-        <div><span style="color: #34d399; font-weight: 700;">[PASS]</span> Step 1 Data Ingestion: 20 clean benchmark rows loaded.</div>
-        <div><span style="color: #34d399; font-weight: 700;">[PASS]</span> Range Verification: All 5 indicators are within valid ranges.</div>
-        <div><span style="color: #34d399; font-weight: 700;">[PASS]</span> Model Execution: Baseline heuristic and Neural ANN evaluated successfully.</div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
