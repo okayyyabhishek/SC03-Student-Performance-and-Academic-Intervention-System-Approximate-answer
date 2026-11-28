@@ -40,148 +40,160 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
       
       <!-- Left Panel: Input Indicators with Manual Typing and Sliders -->
-      <div class="lg:col-span-5 bg-slate-900/80 border border-slate-700/80 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200">
-              Student Indicators
-            </h2>
-            <span class="text-xs text-slate-400">5 Continuous Features</span>
-          </div>
-
-          <!-- Student Record Selector -->
-          <div class="mb-5">
-            <label for="recSelect" class="block text-xs font-semibold text-slate-300 mb-1.5">
-              Choose an example student profile:
-            </label>
-            <select id="recSelect" onchange="loadStudent(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="STU-004" selected>STU-004 (Borderline student — models diverge)</option>
-              <option value="STU-001">STU-001 (High achiever — low risk)</option>
-              <option value="STU-002">STU-002 (Average performance — medium risk)</option>
-              <option value="STU-003">STU-003 (Struggling student — high risk)</option>
-              <option value="STU-BAD">STU-BAD (Out-of-bounds test case: 112% attendance)</option>
-              <option value="CUSTOM">Custom / Manual entry</option>
-            </select>
-          </div>
-
-          <!-- Indicator Inputs: BOTH Direct Typing & Range Slider -->
-          <div class="space-y-4">
-            
-            <!-- 1. Attendance Rate -->
-            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3">
-              <div class="flex justify-between items-center mb-2">
-                <label for="numAtt" class="text-xs font-semibold text-slate-200">
-                  Attendance Rate
-                </label>
-                <div class="flex items-center gap-1.5">
-                  <input type="number" id="numAtt" min="0" max="100" step="0.5" value="78.0" 
-                         oninput="syncFromInput('att')" 
-                         class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                  <span class="text-xs font-semibold text-slate-400 w-4">%</span>
-                </div>
-              </div>
-              <input type="range" id="sliderAtt" min="0" max="100" step="0.5" value="78" 
-                     oninput="syncFromSlider('att')"
-                     class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>0%</span>
-                <span>Threshold: 75%</span>
-                <span>100%</span>
-              </div>
-            </div>
-
-            <!-- 2. Continuous Assessment -->
-            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3">
-              <div class="flex justify-between items-center mb-2">
-                <label for="numAss" class="text-xs font-semibold text-slate-200">
-                  Continuous Assessment Score
-                </label>
-                <div class="flex items-center gap-1.5">
-                  <input type="number" id="numAss" min="0" max="100" step="0.5" value="48.0" 
-                         oninput="syncFromInput('ass')" 
-                         class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                  <span class="text-xs font-semibold text-slate-400 w-4">%</span>
-                </div>
-              </div>
-              <input type="range" id="sliderAss" min="0" max="100" step="0.5" value="48" 
-                     oninput="syncFromSlider('ass')"
-                     class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>0% (Quizzes, midterms)</span>
-                <span>100%</span>
-              </div>
-            </div>
-
-            <!-- 3. Assignment Completion -->
-            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3">
-              <div class="flex justify-between items-center mb-2">
-                <label for="numAsg" class="text-xs font-semibold text-slate-200">
-                  Assignment Completion Rate
-                </label>
-                <div class="flex items-center gap-1.5">
-                  <input type="number" id="numAsg" min="0" max="100" step="0.5" value="52.0" 
-                         oninput="syncFromInput('asg')" 
-                         class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                  <span class="text-xs font-semibold text-slate-400 w-4">%</span>
-                </div>
-              </div>
-              <input type="range" id="sliderAsg" min="0" max="100" step="0.5" value="52" 
-                     oninput="syncFromSlider('asg')"
-                     class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>0% (Homework, labs)</span>
-                <span>100%</span>
-              </div>
-            </div>
-
-            <!-- 4. LMS Engagement Score -->
-            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3">
-              <div class="flex justify-between items-center mb-2">
-                <label for="numEng" class="text-xs font-semibold text-slate-200">
-                  LMS Engagement Score
-                </label>
-                <div class="flex items-center gap-1.5">
-                  <input type="number" id="numEng" min="0" max="10" step="0.1" value="9.0" 
-                         oninput="syncFromInput('eng')" 
-                         class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                  <span class="text-xs font-semibold text-slate-400 w-8">/ 10</span>
-                </div>
-              </div>
-              <input type="range" id="sliderEng" min="0" max="10" step="0.1" value="9" 
-                     oninput="syncFromSlider('eng')"
-                     class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>0.0 (Portal logins, forum activity)</span>
-                <span>10.0</span>
-              </div>
-            </div>
-
-            <!-- 5. Prior Academic Performance -->
-            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3">
-              <div class="flex justify-between items-center mb-2">
-                <label for="numPri" class="text-xs font-semibold text-slate-200">
-                  Prior Academic Performance
-                </label>
-                <div class="flex items-center gap-1.5">
-                  <input type="number" id="numPri" min="0" max="100" step="0.5" value="45.0" 
-                         oninput="syncFromInput('pri')" 
-                         class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                  <span class="text-xs font-semibold text-slate-400 w-4">%</span>
-                </div>
-              </div>
-              <input type="range" id="sliderPri" min="0" max="100" step="0.5" value="45" 
-                     oninput="syncFromSlider('pri')"
-                     class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>0% (Previous semester CGPA)</span>
-                <span>100%</span>
-              </div>
-            </div>
-
-          </div>
+      <div class="lg:col-span-5 bg-slate-900/80 border border-slate-700/80 rounded-2xl p-5 shadow-xl flex flex-col gap-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200">
+            Student Indicators
+          </h2>
+          <span class="text-xs text-slate-400">5 Continuous Features</span>
         </div>
 
-        <div class="pt-4 mt-4 border-t border-slate-800">
+        <!-- Student Record Selector -->
+        <div>
+          <label for="recSelect" class="block text-xs font-semibold text-slate-300 mb-1.5">
+            Choose an example student profile:
+          </label>
+          <select id="recSelect" onchange="loadStudent(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="STU-004" selected>STU-004 (Borderline student — models diverge)</option>
+            <option value="STU-001">STU-001 (High achiever — low risk)</option>
+            <option value="STU-002">STU-002 (Average performance — medium risk)</option>
+            <option value="STU-003">STU-003 (Struggling student — high risk)</option>
+            <option value="STU-BAD">STU-BAD (Out-of-bounds test case: 112% attendance)</option>
+            <option value="CUSTOM">Custom / Manual entry</option>
+          </select>
+        </div>
+
+        <!-- Indicator Inputs: BOTH Direct Typing & Range Slider -->
+        <div class="flex-1 flex flex-col justify-between gap-3.5">
+          
+          <!-- 1. Attendance Rate -->
+          <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5">
+            <div class="flex justify-between items-start mb-2.5">
+              <div>
+                <label for="numAtt" class="block text-xs font-semibold text-slate-200">
+                  Attendance Rate
+                </label>
+                <span class="text-[11px] text-slate-400">Minimum recommended threshold: 75%</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <input type="number" id="numAtt" min="0" max="100" step="0.5" value="78.0" 
+                       oninput="syncFromInput('att')" 
+                       class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+              </div>
+            </div>
+            <input type="range" id="sliderAtt" min="0" max="100" step="0.5" value="78" 
+                   oninput="syncFromSlider('att')"
+                   class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+              <span>0%</span>
+              <span>100%</span>
+            </div>
+          </div>
+
+          <!-- 2. Continuous Assessment -->
+          <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5">
+            <div class="flex justify-between items-start mb-2.5">
+              <div>
+                <label for="numAss" class="block text-xs font-semibold text-slate-200">
+                  Continuous Assessment Score
+                </label>
+                <span class="text-[11px] text-slate-400">Quizzes, midterms, and class tests</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <input type="number" id="numAss" min="0" max="100" step="0.5" value="48.0" 
+                       oninput="syncFromInput('ass')" 
+                       class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+              </div>
+            </div>
+            <input type="range" id="sliderAss" min="0" max="100" step="0.5" value="48" 
+                   oninput="syncFromSlider('ass')"
+                   class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+              <span>0%</span>
+              <span>100%</span>
+            </div>
+          </div>
+
+          <!-- 3. Assignment Completion -->
+          <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5">
+            <div class="flex justify-between items-start mb-2.5">
+              <div>
+                <label for="numAsg" class="block text-xs font-semibold text-slate-200">
+                  Assignment Completion Rate
+                </label>
+                <span class="text-[11px] text-slate-400">Submitted homework and lab work</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <input type="number" id="numAsg" min="0" max="100" step="0.5" value="52.0" 
+                       oninput="syncFromInput('asg')" 
+                       class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+              </div>
+            </div>
+            <input type="range" id="sliderAsg" min="0" max="100" step="0.5" value="52" 
+                   oninput="syncFromSlider('asg')"
+                   class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+              <span>0%</span>
+              <span>100%</span>
+            </div>
+          </div>
+
+          <!-- 4. LMS Engagement Score -->
+          <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5">
+            <div class="flex justify-between items-start mb-2.5">
+              <div>
+                <label for="numEng" class="block text-xs font-semibold text-slate-200">
+                  LMS Engagement Score
+                </label>
+                <span class="text-[11px] text-slate-400">Course portal logins and forum activity</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <input type="number" id="numEng" min="0" max="10" step="0.1" value="9.0" 
+                       oninput="syncFromInput('eng')" 
+                       class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <span class="text-xs font-semibold text-slate-400 w-8">/ 10</span>
+              </div>
+            </div>
+            <input type="range" id="sliderEng" min="0" max="10" step="0.1" value="9" 
+                   oninput="syncFromSlider('eng')"
+                   class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+              <span>0.0</span>
+              <span>10.0</span>
+            </div>
+          </div>
+
+          <!-- 5. Prior Academic Performance -->
+          <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5">
+            <div class="flex justify-between items-start mb-2.5">
+              <div>
+                <label for="numPri" class="block text-xs font-semibold text-slate-200">
+                  Prior Academic Performance
+                </label>
+                <span class="text-[11px] text-slate-400">Previous semester score / CGPA equivalent</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <input type="number" id="numPri" min="0" max="100" step="0.5" value="45.0" 
+                       oninput="syncFromInput('pri')" 
+                       class="w-20 px-2 py-1 text-right text-xs font-bold bg-slate-900 border border-slate-600 rounded-md text-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <span class="text-xs font-semibold text-slate-400 w-4">%</span>
+              </div>
+            </div>
+            <input type="range" id="sliderPri" min="0" max="100" step="0.5" value="45" 
+                   oninput="syncFromSlider('pri')"
+                   class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1.5">
+              <span>0%</span>
+              <span>100%</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="pt-3 border-t border-slate-800">
           <button onclick="evaluateModels()" class="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-500 text-white shadow-md transition flex items-center justify-center gap-2">
             <span>Run Assessment</span>
           </button>
