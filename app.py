@@ -45,9 +45,11 @@ html, body, [class*="css"] {
 }
 
 .block-container {
-    padding-top: 1.25rem !important;
-    padding-bottom: 2rem !important;
-    max-width: 1200px !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1.5rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    max-width: 100% !important;
 }
 
 /* Main Cards */

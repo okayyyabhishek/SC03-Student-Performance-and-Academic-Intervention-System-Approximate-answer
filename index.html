@@ -23,21 +23,21 @@
     }
   </style>
 </head>
-<body class="bg-[#0f172a] text-slate-100 min-h-screen p-4 md:p-8 antialiased selection:bg-blue-600 selection:text-white">
-  <div class="max-w-6xl mx-auto space-y-5">
+<body class="bg-[#0f172a] text-slate-100 min-h-screen p-3 md:px-6 md:py-4 antialiased selection:bg-blue-600 selection:text-white">
+  <div class="w-full mx-auto space-y-4">
     
     <!-- Header -->
-    <header class="rounded-2xl border border-slate-700/80 bg-slate-900/90 px-6 py-5 shadow-xl">
+    <header class="rounded-2xl border border-slate-700/80 bg-slate-900/90 px-6 py-4 shadow-xl">
       <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">
         Student Performance & Academic Intervention System
       </h1>
-      <p class="text-sm text-slate-300 mt-1.5 leading-relaxed">
+      <p class="text-sm text-slate-300 mt-1 leading-relaxed">
         An early warning system that evaluates five student academic indicators to identify at-risk students and recommend targeted faculty support.
       </p>
     </header>
 
     <!-- Main Two-Column Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
       
       <!-- Left Panel: Input Indicators with Manual Typing and Sliders -->
       <div class="lg:col-span-5 bg-slate-900/80 border border-slate-700/80 rounded-2xl p-5 shadow-xl flex flex-col gap-4">
@@ -490,7 +490,7 @@
 
       let chartHtml = "";
       rows.forEach(r => {
-        const w = Math.min(Math.abs(r.delta) * 4.5, 130);
+        const w = Math.min(Math.abs(r.delta) * 5.8, 175);
         let left = "", right = "";
         if (r.delta < 0) {
           right = `<div style="background: #ef4444; height: 18px; width: ${w}px; border-radius: 3px;"></div>`;
@@ -499,9 +499,9 @@
         }
         chartHtml += `
           <tr style="height: 30px;">
-            <td style="text-align: right; padding-right: 12px; color: #cbd5e1; font-size: 12px; font-weight: 500; white-space: nowrap;">${r.label}</td>
-            <td style="width: 135px; border-right: 2px solid rgba(255,255,255,0.25); padding: 0;">${left}</td>
-            <td style="width: 135px; padding: 0;">${right}</td>
+            <td style="text-align: right; padding-right: 14px; color: #cbd5e1; font-size: 12px; font-weight: 500; white-space: nowrap;">${r.label}</td>
+            <td style="width: 180px; border-right: 2px solid rgba(255,255,255,0.25); padding: 0;">${left}</td>
+            <td style="width: 180px; padding: 0;">${right}</td>
           </tr>
         `;
       });
