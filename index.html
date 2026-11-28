@@ -27,35 +27,13 @@
   <div class="max-w-6xl mx-auto space-y-5">
     
     <!-- Header -->
-    <header class="relative rounded-2xl border border-slate-700/80 bg-slate-900/90 p-6 md:p-7 shadow-xl">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-300 border border-blue-500/30">
-              <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-              Capstone Project SC03
-            </span>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-              Step 6: Testing & Validation
-            </span>
-          </div>
-          <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">
-            Student Performance & Academic Intervention System
-          </h1>
-          <p class="text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-            An early warning system that evaluates five student academic indicators to identify at-risk students and recommend targeted faculty support.
-          </p>
-        </div>
-        
-        <div class="flex md:flex-col items-start md:items-end justify-between border-t md:border-t-0 border-slate-800 pt-3 md:pt-0">
-          <div class="text-xs text-slate-400">
-            Selected Student: <span class="text-blue-400 font-bold" id="badgeActiveRec">STU-004</span>
-          </div>
-          <div class="text-xs text-slate-400 mt-1">
-            Faculty Advisory Tool
-          </div>
-        </div>
-      </div>
+    <header class="rounded-2xl border border-slate-700/80 bg-slate-900/90 px-6 py-5 shadow-xl">
+      <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">
+        Student Performance & Academic Intervention System
+      </h1>
+      <p class="text-sm text-slate-300 mt-1.5 leading-relaxed">
+        An early warning system that evaluates five student academic indicators to identify at-risk students and recommend targeted faculty support.
+      </p>
     </header>
 
     <!-- Main Two-Column Layout -->
@@ -224,30 +202,34 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-4">
             
             <!-- Baseline Card -->
-            <div class="rounded-xl border border-slate-700 bg-slate-800/80 p-4 shadow-sm">
-              <div class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
-                Rule-Based Baseline
+            <div class="rounded-xl border border-slate-700 bg-slate-800/80 p-4 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                  Rule-Based Baseline
+                </div>
+                <div class="flex flex-wrap items-baseline gap-2">
+                  <span id="cardBaseBand" class="text-2xl font-bold text-amber-400">Medium</span>
+                  <span id="cardBaseScore" class="text-xs font-medium text-slate-300 whitespace-nowrap">score 61.7 (50 to &lt;70)</span>
+                </div>
               </div>
-              <div class="flex items-baseline gap-2">
-                <span id="cardBaseBand" class="text-2xl font-bold text-amber-400">Medium</span>
-                <span id="cardBaseScore" class="text-xs font-medium text-slate-300">score 61.7 (50 to &lt;70)</span>
-              </div>
-              <div class="mt-2.5 p-2 rounded-lg bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
+              <div class="mt-3 p-2.5 rounded-lg bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
                 <span class="font-semibold text-slate-400">Action:</span> <span id="cardBaseAction">Mentoring or study plan</span>
               </div>
             </div>
 
             <!-- Neural Model Card -->
-            <div class="rounded-xl border border-blue-600/70 bg-slate-800/80 p-4 shadow-sm">
-              <div class="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-1">
-                Neural Network (ANN)
+            <div class="rounded-xl border border-blue-600/70 bg-slate-800/80 p-4 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-1">
+                  Neural Network (ANN)
+                </div>
+                <div class="flex flex-wrap items-baseline gap-2">
+                  <span id="cardNeuralBand" class="text-2xl font-bold text-rose-400">High</span>
+                  <span class="text-xs font-medium text-slate-400 whitespace-nowrap">MLPClassifier</span>
+                </div>
               </div>
-              <div class="flex items-baseline gap-2">
-                <span id="cardNeuralBand" class="text-2xl font-bold text-rose-400">High</span>
-                <span class="text-xs font-medium text-slate-400">MLPClassifier</span>
-              </div>
-              <div class="mt-2.5 p-2 rounded-lg bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
-                <span class="font-semibold text-blue-400">Action:</span> <span id="cardNeuralAction">Immediate faculty follow-up</span>
+              <div class="mt-3 p-2.5 rounded-lg bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
+                <span class="font-semibold text-blue-400">Action:</span> <span id="cardNeuralAction">Faculty consultation</span>
               </div>
             </div>
 
@@ -258,36 +240,44 @@
             <span>Notice: Baseline predicts <strong>Medium Risk</strong>, while the Neural Network predicts <strong>High Risk</strong>. Check the indicator contributions below.</span>
           </div>
 
-          <!-- Scale (0 to 100) -->
+          <!-- Scale (0 to 100) - Pure HTML/CSS (No SVG clipping or font stretching) -->
           <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60 mb-4">
-            <div class="text-xs font-bold text-slate-200 mb-2">
+            <div class="text-xs font-bold text-slate-200 mb-3">
               Comparison on 0 to 100 Scale
             </div>
-            <div class="relative w-full h-14">
-              <svg width="100%" height="56" viewBox="0 0 500 56" preserveAspectRatio="none">
-                <!-- Zones -->
-                <rect x="20" y="26" width="230" height="4" fill="rgba(239, 68, 68, 0.4)" rx="2"/>
-                <rect x="250" y="26" width="92" height="4" fill="rgba(245, 158, 11, 0.4)" rx="2"/>
-                <rect x="342" y="26" width="138" height="4" fill="rgba(16, 185, 129, 0.4)" rx="2"/>
-                <!-- Axis Line -->
-                <line x1="20" y1="28" x2="480" y2="28" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-                <!-- Ticks -->
-                <line x1="20" y1="22" x2="20" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
-                <line x1="250" y1="22" x2="250" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
-                <line x1="342" y1="22" x2="342" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
-                <line x1="480" y1="22" x2="480" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
-                <!-- Labels -->
-                <text x="20" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">0 (High Risk)</text>
-                <text x="250" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">50</text>
-                <text x="342" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">70</text>
-                <text x="480" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">100 (Low Risk)</text>
-                <!-- Baseline Pointer -->
-                <polygon id="ptrBase" points="303,16 297,6 309,6" fill="#ffffff"/>
-                <text id="lblBase" x="303" y="4" font-size="9" font-weight="700" text-anchor="middle" fill="#ffffff">baseline 61.7</text>
-                <!-- Neural Pointer -->
-                <polygon id="ptrNeural" points="213,30 207,40 219,40" fill="#60a5fa"/>
-                <text id="lblNeural" x="213" y="52" font-size="9" font-weight="700" text-anchor="middle" fill="#93c5fd">neural (high)</text>
-              </svg>
+            <div class="px-1 pt-6 pb-9 relative select-none">
+              <!-- Baseline Marker Above Track -->
+              <div id="markerBase" class="absolute top-0 -translate-x-1/2 flex flex-col items-center transition-all duration-200" style="left: 61.7%;">
+                <span id="lblBase" class="text-[11px] font-bold text-white whitespace-nowrap leading-none mb-1">baseline 61.7</span>
+                <span class="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[6px] border-t-white"></span>
+              </div>
+
+              <!-- Colored Track & Ticks -->
+              <div class="relative h-2 w-full rounded-full bg-slate-700 flex">
+                <div class="h-full bg-rose-500/50 rounded-l-full" style="width: 50%;"></div>
+                <div class="h-full bg-amber-500/50" style="width: 20%;"></div>
+                <div class="h-full bg-emerald-500/50 rounded-r-full" style="width: 30%;"></div>
+
+                <!-- Tick Marks -->
+                <div class="absolute top-1/2 -translate-y-1/2 left-0 w-0.5 h-3.5 bg-slate-300"></div>
+                <div class="absolute top-1/2 -translate-y-1/2 left-[50%] w-0.5 h-3.5 bg-slate-300"></div>
+                <div class="absolute top-1/2 -translate-y-1/2 left-[70%] w-0.5 h-3.5 bg-slate-300"></div>
+                <div class="absolute top-1/2 -translate-y-1/2 right-0 w-0.5 h-3.5 bg-slate-300"></div>
+              </div>
+
+              <!-- Neural Marker Below Track -->
+              <div id="markerNeural" class="absolute top-[36px] -translate-x-1/2 flex flex-col items-center transition-all duration-200" style="left: 42%;">
+                <span class="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-b-[6px] border-b-blue-400"></span>
+                <span id="lblNeural" class="text-[11px] font-bold text-blue-300 whitespace-nowrap leading-none mt-1">neural (high)</span>
+              </div>
+
+              <!-- Scale Axis Labels (Lower row, zero overlap) -->
+              <div class="relative h-4 mt-7 text-[11px] font-semibold text-slate-400">
+                <span class="absolute left-0 whitespace-nowrap">0 (High Risk)</span>
+                <span class="absolute left-[50%] -translate-x-1/2 whitespace-nowrap">50</span>
+                <span class="absolute left-[70%] -translate-x-1/2 whitespace-nowrap">70</span>
+                <span class="absolute right-0 whitespace-nowrap">100 (Low Risk)</span>
+              </div>
             </div>
           </div>
 
@@ -295,14 +285,14 @@
           <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60 mb-3">
             <div class="flex justify-between items-center text-xs font-bold text-slate-200 mb-2">
               <span>How each indicator affects the assessment:</span>
-              <span class="text-[11px] text-slate-400">Deviation from benchmark</span>
+              <span class="text-[11px] text-slate-400 whitespace-nowrap">Deviation from benchmark</span>
             </div>
             <table class="w-full border-collapse text-xs">
               <thead>
                 <tr class="text-[10px] text-slate-400 uppercase tracking-wider">
-                  <th class="w-36 text-right pr-3 font-semibold">Indicator</th>
-                  <th class="text-right pr-2 text-emerald-400 font-bold">← Lowers Risk (Safe)</th>
-                  <th class="text-left pl-2 text-rose-400 font-bold">Raises Risk (Needs Attention) →</th>
+                  <th class="w-36 text-right pr-3 font-semibold whitespace-nowrap">Indicator</th>
+                  <th class="text-right pr-2 text-emerald-400 font-bold whitespace-nowrap">← Lowers Risk</th>
+                  <th class="text-left pl-2 text-rose-400 font-bold whitespace-nowrap">Raises Risk →</th>
                 </tr>
               </thead>
               <tbody id="chartRows" class="space-y-1">
@@ -342,7 +332,6 @@
     };
 
     function loadStudent(id) {
-      document.getElementById('badgeActiveRec').textContent = id;
       if (studentDB[id]) {
         const s = studentDB[id];
         setValues(s.att, s.ass, s.asg, s.eng, s.pri);
@@ -372,7 +361,6 @@
       const num = document.getElementById('num' + capitalize(field));
       num.value = slider.value;
       document.getElementById('recSelect').value = 'CUSTOM';
-      document.getElementById('badgeActiveRec').textContent = 'Custom';
       evaluateModels();
     }
 
@@ -384,7 +372,6 @@
         slider.value = val;
       }
       document.getElementById('recSelect').value = 'CUSTOM';
-      document.getElementById('badgeActiveRec').textContent = 'Custom';
       evaluateModels();
     }
 
@@ -448,14 +435,14 @@
       document.getElementById('cardBaseAction').textContent = baseAction;
 
       // 2. Neural Network Prediction
-      let neuralBand = "Medium", neuralAction = "Mentoring or study plan support", neuralScore = 60.0, neuralCol = "#f59e0b";
+      let neuralBand = "Medium", neuralAction = "Mentoring or study plan", neuralScore = 60.0, neuralCol = "#f59e0b";
       if (att >= 80 && ass >= 65 && eng >= 6.0) {
         neuralBand = "Low"; neuralAction = "Routine monitoring & check-in"; neuralScore = 80.0; neuralCol = "#10b981";
       } else if (att < 60 || ass < 50 || eng < 3.5 || (ass < 50 && pri < 50)) {
-        neuralBand = "High"; neuralAction = "Immediate faculty consultation & follow-up"; neuralScore = 42.0; neuralCol = "#f43f5e";
+        neuralBand = "High"; neuralAction = "Faculty consultation"; neuralScore = 42.0; neuralCol = "#f43f5e";
       }
       if (rec === 'STU-004') {
-        neuralBand = "High"; neuralAction = "Immediate faculty consultation & follow-up"; neuralScore = 42.0; neuralCol = "#f43f5e";
+        neuralBand = "High"; neuralAction = "Faculty consultation"; neuralScore = 42.0; neuralCol = "#f43f5e";
       }
 
       document.getElementById('cardNeuralBand').textContent = neuralBand;
@@ -472,16 +459,14 @@
         alert.innerHTML = `<span>Consensus: Both the baseline rule and neural network agree on <strong>${baseBand} Risk</strong>.</span>`;
       }
 
-      // 4. Twin Read Scale Update
-      const basePx = 20 + (Math.max(0, Math.min(100, baseScore)) * 4.6);
-      const neuralPx = 20 + (Math.max(0, Math.min(100, neuralScore)) * 4.6);
+      // 4. Scale Marker Update (Pure CSS % positioning, clamped inside bounds so labels never clip)
+      const basePos = Math.max(6, Math.min(94, baseScore));
+      const neuralPos = Math.max(6, Math.min(94, neuralScore));
 
-      document.getElementById('ptrBase').setAttribute('points', `${basePx},16 ${basePx - 6},6 ${basePx + 6},6`);
-      document.getElementById('lblBase').setAttribute('x', basePx);
+      document.getElementById('markerBase').style.left = `${basePos}%`;
       document.getElementById('lblBase').textContent = `baseline ${baseScore.toFixed(1)}`;
 
-      document.getElementById('ptrNeural').setAttribute('points', `${neuralPx},30 ${neuralPx - 6},40 ${neuralPx + 6},40`);
-      document.getElementById('lblNeural').setAttribute('x', neuralPx);
+      document.getElementById('markerNeural').style.left = `${neuralPos}%`;
       document.getElementById('lblNeural').textContent = `neural (${neuralBand.toLowerCase()})`;
 
       // 5. Diverging Feature Contribution Chart
@@ -504,7 +489,7 @@
         }
         chartHtml += `
           <tr style="height: 24px;">
-            <td style="text-align: right; padding-right: 12px; color: #cbd5e1; font-size: 11px; font-weight: 500;">${r.label}</td>
+            <td style="text-align: right; padding-right: 12px; color: #cbd5e1; font-size: 11px; font-weight: 500; white-space: nowrap;">${r.label}</td>
             <td style="width: 120px; border-right: 2px solid rgba(255,255,255,0.25); padding: 0;">${left}</td>
             <td style="width: 120px; padding: 0;">${right}</td>
           </tr>

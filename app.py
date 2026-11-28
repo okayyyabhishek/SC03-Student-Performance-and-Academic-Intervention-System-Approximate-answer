@@ -191,27 +191,12 @@ def calculate_baseline(att, ass, asg, eng, pri):
 st.markdown(
     """
     <div style="background: #0f172a; border: 1px solid #334155; border-radius: 14px; padding: 18px 22px; margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <div style="display: flex; gap: 8px; margin-bottom: 6px;">
-                    <span style="font-size: 11px; font-weight: 700; background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); padding: 2px 10px; border-radius: 999px;">
-                        Capstone Project SC03
-                    </span>
-                    <span style="font-size: 11px; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 10px; border-radius: 999px;">
-                        Step 6: Testing & Validation
-                    </span>
-                </div>
-                <h1 style="font-size: 22px; font-weight: 800; color: #ffffff; margin: 0;">
-                    Student Performance & Academic Intervention System
-                </h1>
-                <p style="font-size: 13px; color: #94a3b8; margin: 4px 0 0 0;">
-                    An early warning system that evaluates continuous student indicators to identify at-risk students and recommend targeted faculty support.
-                </p>
-            </div>
-            <div style="text-align: right;">
-                <span style="font-size: 11px; color: #64748b;">Decision Support Tool</span>
-            </div>
-        </div>
+        <h1 style="font-size: 22px; font-weight: 800; color: #ffffff; margin: 0;">
+            Student Performance & Academic Intervention System
+        </h1>
+        <p style="font-size: 13px; color: #94a3b8; margin: 4px 0 0 0;">
+            An early warning system that evaluates continuous student indicators to identify at-risk students and recommend targeted faculty support.
+        </p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -406,33 +391,42 @@ with col_results:
             unsafe_allow_html=True,
         )
 
-    # Twin Read SVG Continuum
-    base_pct = max(min(base_score, 100.0), 0.0)
-    neural_pct = max(min(neural_score, 100.0), 0.0)
+    # Twin Read Pure HTML/CSS Continuum (Zero clipping or font stretch)
+    base_pct = max(min(base_score, 94.0), 6.0)
+    neural_pct = max(min(neural_score, 94.0), 6.0)
 
     st.markdown(
         f"""
-        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 12px 16px; margin-bottom: 14px;">
-            <div style="font-size: 12px; font-weight: 700; color: #f1f5f9; margin-bottom: 2px;">Comparison on 0 to 100 Scale</div>
-            <div style="position: relative; width: 100%; height: 56px;">
-                <svg width="100%" height="56" viewBox="0 0 500 56" preserveAspectRatio="none">
-                    <rect x="20" y="26" width="230" height="4" fill="rgba(239, 68, 68, 0.4)" rx="2"/>
-                    <rect x="250" y="26" width="92" height="4" fill="rgba(245, 158, 11, 0.4)" rx="2"/>
-                    <rect x="342" y="26" width="138" height="4" fill="rgba(16, 185, 129, 0.4)" rx="2"/>
-                    <line x1="20" y1="28" x2="480" y2="28" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-                    <line x1="20" y1="22" x2="20" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
-                    <line x1="250" y1="22" x2="250" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
-                    <line x1="342" y1="22" x2="342" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
-                    <line x1="480" y1="22" x2="480" y2="34" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
-                    <text x="20" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">0 (High)</text>
-                    <text x="250" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">50</text>
-                    <text x="342" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">70</text>
-                    <text x="480" y="46" font-size="10" font-weight="600" text-anchor="middle" fill="#94a3b8">100 (Low)</text>
-                    <polygon points="{20 + (base_pct * 4.6)},18 {20 + (base_pct * 4.6) - 5},8 {20 + (base_pct * 4.6) + 5},8" fill="#ffffff"/>
-                    <text x="{20 + (base_pct * 4.6)}" y="6" font-size="9" font-weight="700" text-anchor="middle" fill="#ffffff">baseline {base_score:.1f}</text>
-                    <polygon points="{20 + (neural_pct * 4.6)},32 {20 + (neural_pct * 4.6) - 5},42 {20 + (neural_pct * 4.6) + 5},42" fill="#60a5fa"/>
-                    <text x="{20 + (neural_pct * 4.6)}" y="52" font-size="9" font-weight="700" text-anchor="middle" fill="#93c5fd">neural ({neural_band.lower()})</text>
-                </svg>
+        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 14px 18px; margin-bottom: 14px;">
+            <div style="font-size: 12px; font-weight: 700; color: #f1f5f9; margin-bottom: 12px;">Comparison on 0 to 100 Scale</div>
+            <div style="position: relative; padding: 26px 4px 36px 4px; user-select: none;">
+                <!-- Baseline Pointer Above Track -->
+                <div style="position: absolute; top: 0; left: {base_pct}%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-size: 11px; font-weight: 700; color: #ffffff; white-space: nowrap; line-height: 1; margin-bottom: 4px;">baseline {base_score:.1f}</span>
+                    <span style="width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid #ffffff;"></span>
+                </div>
+                <!-- Colored Track & Ticks -->
+                <div style="position: relative; height: 8px; width: 100%; border-radius: 999px; background: #334155; display: flex;">
+                    <div style="height: 100%; width: 50%; background: rgba(239, 68, 68, 0.55); border-radius: 999px 0 0 999px;"></div>
+                    <div style="height: 100%; width: 20%; background: rgba(245, 158, 11, 0.55);"></div>
+                    <div style="height: 100%; width: 30%; background: rgba(16, 185, 129, 0.55); border-radius: 0 999px 999px 0;"></div>
+                    <div style="position: absolute; top: 50%; transform: translateY(-50%); left: 0%; width: 2px; height: 14px; background: #cbd5e1;"></div>
+                    <div style="position: absolute; top: 50%; transform: translateY(-50%); left: 50%; width: 2px; height: 14px; background: #cbd5e1;"></div>
+                    <div style="position: absolute; top: 50%; transform: translateY(-50%); left: 70%; width: 2px; height: 14px; background: #cbd5e1;"></div>
+                    <div style="position: absolute; top: 50%; transform: translateY(-50%); right: 0%; width: 2px; height: 14px; background: #cbd5e1;"></div>
+                </div>
+                <!-- Neural Pointer Below Track -->
+                <div style="position: absolute; top: 38px; left: {neural_pct}%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center;">
+                    <span style="width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 6px solid #60a5fa;"></span>
+                    <span style="font-size: 11px; font-weight: 700; color: #93c5fd; white-space: nowrap; line-height: 1; margin-top: 4px;">neural ({neural_band.lower()})</span>
+                </div>
+                <!-- Axis Tick Labels -->
+                <div style="position: relative; height: 16px; margin-top: 28px; font-size: 11px; font-weight: 600; color: #94a3b8;">
+                    <span style="position: absolute; left: 0; white-space: nowrap;">0 (High Risk)</span>
+                    <span style="position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap;">50</span>
+                    <span style="position: absolute; left: 70%; transform: translateX(-50%); white-space: nowrap;">70</span>
+                    <span style="position: absolute; right: 0; white-space: nowrap;">100 (Low Risk)</span>
+                </div>
             </div>
         </div>
         """,
@@ -460,7 +454,7 @@ with col_results:
 
         chart_rows += f"""
         <tr style="height: 22px;">
-            <td style="text-align: right; font-size: 11px; color: #cbd5e1; padding-right: 10px; width: 140px;">{feat_name}</td>
+            <td style="text-align: right; font-size: 11px; color: #cbd5e1; padding-right: 10px; width: 140px; white-space: nowrap;">{feat_name}</td>
             <td style="width: 110px; border-right: 2px solid rgba(255,255,255,0.25); padding: 0;">{left_cell}</td>
             <td style="width: 110px; padding: 0;">{right_cell}</td>
         </tr>
@@ -474,8 +468,8 @@ with col_results:
                 <thead>
                     <tr style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">
                         <th></th>
-                        <th style="text-align: right; padding-right: 8px; color: #34d399;">← Lowers Risk (Safe)</th>
-                        <th style="text-align: left; padding-left: 8px; color: #f87171;">Raises Risk (Needs attention) →</th>
+                        <th style="text-align: right; padding-right: 8px; color: #34d399; white-space: nowrap;">← Lowers Risk</th>
+                        <th style="text-align: left; padding-left: 8px; color: #f87171; white-space: nowrap;">Raises Risk →</th>
                     </tr>
                 </thead>
                 <tbody>
